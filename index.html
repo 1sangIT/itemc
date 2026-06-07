@@ -409,55 +409,8 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-label">이번 주 에디터 픽</div>
-  <div class="hero-grid">
-
-    <!-- 메인 피처 -->
-    <div class="hero-main">
-      <div class="hero-main-img"></div>
-      <div class="hero-main-overlay"></div>
-      <div class="hero-main-content">
-        <div class="cat-badge">가젯</div>
-        <div class="badge badge-K">✍ 편집장 K</div>
-        <div class="card-title-lg">reMarkable Paper Pro<br>3개월 실사용 후기</div>
-        <div class="card-desc">국내 출시 전에 써봤다. E잉크 태블릿의 끝판왕인가, 아니면 30만원짜리 메모장인가.</div>
-        <div class="card-meta">
-          <span>2026. 06. 07</span>
-          <span class="card-meta-dot"></span>
-          <span>읽는 데 8분</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 서브 1 -->
-    <div class="hero-sub">
-      <div class="hero-sub-img">🎧</div>
-      <div class="hero-sub-content">
-        <div class="cat-badge">오디오</div>
-        <div class="badge badge-G">💰 에디터 G</div>
-        <div class="card-title-md">소니 WH-1000XM6 vs 에어팟 맥스<br>반값으로 더 잘 들린다</div>
-        <div class="card-meta" style="margin-top:8px;">
-          <span>2026. 06. 05</span>
-          <span class="card-meta-dot"></span>
-          <span>6분</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 서브 2 -->
-    <div class="hero-sub">
-      <div class="hero-sub-img">💻</div>
-      <div class="hero-sub-content">
-        <div class="cat-badge">노트북</div>
-        <div class="badge badge-B">🔪 에디터 B</div>
-        <div class="card-title-md">맥북 에어 M4 — 칭찬하기 싫은데<br>어쩔 수 없다</div>
-        <div class="card-meta" style="margin-top:8px;">
-          <span>2026. 06. 03</span>
-          <span class="card-meta-dot"></span>
-          <span>5분</span>
-        </div>
-      </div>
-    </div>
-
+  <div class="hero-grid" id="heroGrid">
+    <div style="grid-column:1/-1; padding:60px; text-align:center; color:#555; font-size:14px;">불러오는 중...</div>
   </div>
 </section>
 
@@ -467,78 +420,16 @@
   <!-- 최신 아티클 -->
   <div class="section-header">
     <div class="section-title">최신 아티클</div>
-    <a href="#" class="see-all">전체 보기 →</a>
   </div>
-
-  <div class="article-grid">
-    <div class="article-card">
-      <div class="article-thumb">⌚</div>
-      <div class="cat-badge">웨어러블</div>
-      <div class="badge badge-K">✍ 편집장 K</div>
-      <div class="card-title-sm">갤럭시 워치 Ultra 2 — 이번엔 진짜 울트라가 맞다</div>
-      <div class="card-desc">전작의 배터리 문제를 완전히 잡았다. 가격이 문제지.</div>
-      <div class="card-meta" style="margin-top:auto; padding-top:12px;">
-        <span>2026. 06. 01</span><span class="card-meta-dot"></span><span>7분</span>
-      </div>
-    </div>
-    <div class="article-card">
-      <div class="article-thumb">🖨️</div>
-      <div class="cat-badge">홈오피스</div>
-      <div class="badge badge-G">💰 에디터 G</div>
-      <div class="card-title-sm">프린터는 왜 다 비쌀까 — 3만원대 정답이 있다</div>
-      <div class="card-desc">잉크젯 말고 레이저. 초기 비용이 전부다.</div>
-      <div class="card-meta" style="margin-top:auto; padding-top:12px;">
-        <span>2026. 05. 28</span><span class="card-meta-dot"></span><span>4분</span>
-      </div>
-    </div>
-    <div class="article-card">
-      <div class="article-thumb">📷</div>
-      <div class="cat-badge">카메라</div>
-      <div class="badge badge-B">🔪 에디터 B</div>
-      <div class="card-title-sm">소니 ZV-E10 II — 유튜버를 위한다는 카메라의 민낯</div>
-      <div class="card-desc">마케팅이 너무 앞서간다. 실제로 써보면 알 것들.</div>
-      <div class="card-meta" style="margin-top:auto; padding-top:12px;">
-        <span>2026. 05. 25</span><span class="card-meta-dot"></span><span>6분</span>
-      </div>
-    </div>
+  <div class="article-grid" id="articleGrid">
+    <div style="grid-column:1/-1; padding:40px; text-align:center; color:#555; font-size:14px;">불러오는 중...</div>
   </div>
 
   <!-- 에디터 픽 랭킹 -->
-  <div class="section-header">
+  <div class="section-header" id="picksHeader" style="display:none;">
     <div class="section-title">이달의 강력 추천</div>
   </div>
-  <div class="picks-list">
-    <div class="pick-item">
-      <div class="pick-num">01</div>
-      <div class="pick-thumb">📱</div>
-      <div class="pick-info">
-        <div class="badge badge-K" style="margin-bottom:6px;">✍ 편집장 K</div>
-        <div class="pick-title">아이패드 미니 7 — 가장 완성된 폼팩터</div>
-        <div class="card-meta"><span>가젯</span><span class="card-meta-dot"></span><span>2026. 05. 20</span></div>
-      </div>
-      <div class="pick-arrow">→</div>
-    </div>
-    <div class="pick-item">
-      <div class="pick-num">02</div>
-      <div class="pick-thumb">🎵</div>
-      <div class="pick-info">
-        <div class="badge badge-G" style="margin-bottom:6px;">💰 에디터 G</div>
-        <div class="pick-title">샤오미 버즈 5 Pro — ANC 성능 상위 10%인데 6만원</div>
-        <div class="card-meta"><span>오디오</span><span class="card-meta-dot"></span><span>2026. 05. 15</span></div>
-      </div>
-      <div class="pick-arrow">→</div>
-    </div>
-    <div class="pick-item">
-      <div class="pick-num">03</div>
-      <div class="pick-thumb">🖥️</div>
-      <div class="pick-info">
-        <div class="badge badge-B" style="margin-bottom:6px;">🔪 에디터 B</div>
-        <div class="pick-title">LG 그램 Pro 2026 — 가볍다는 것 말고 내세울 게 없다</div>
-        <div class="card-meta"><span>노트북</span><span class="card-meta-dot"></span><span>2026. 05. 10</span></div>
-      </div>
-      <div class="pick-arrow">→</div>
-    </div>
-  </div>
+  <div class="picks-list" id="picksList"></div>
 
   <!-- 뉴스레터 -->
   <div class="newsletter">
@@ -552,6 +443,148 @@
   </div>
 
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://axgiamwbkwjivbmfvwww.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z2lhbXdia3dqaXZibWZ2dnd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3OTAxNjEsImV4cCI6MjA5NjM2NjE2MX0.fz9iaZa9NCzLkszEnvqxBhdaFwj2J0tR6QFZH13Pwwo';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const BADGE = {
+  K: '<span class="badge badge-K">✍ 편집장 K</span>',
+  G: '<span class="badge badge-G">💰 에디터 G</span>',
+  B: '<span class="badge badge-B">🔪 에디터 B</span>'
+};
+
+function fmtDate(iso) {
+  return new Date(iso).toLocaleDateString('ko-KR', {year:'numeric',month:'2-digit',day:'2-digit'});
+}
+
+function articleUrl(a) {
+  return 'article.html?slug=' + encodeURIComponent(a.slug);
+}
+
+function coverBg(a) {
+  if (a.cover_image_url) return `background:url('${a.cover_image_url}') center/cover`;
+  return '';
+}
+
+async function loadMain() {
+  const { data: articles } = await sb
+    .from('articles')
+    .select('*')
+    .eq('published', true)
+    .order('created_at', { ascending: false })
+    .limit(12);
+
+  if (!articles || articles.length === 0) {
+    document.getElementById('heroGrid').innerHTML =
+      '<div style="grid-column:1/-1;padding:60px;text-align:center;color:#555;font-size:14px;">아직 발행된 글이 없습니다.</div>';
+    document.getElementById('articleGrid').innerHTML =
+      '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555;font-size:14px;">아직 발행된 글이 없습니다.</div>';
+    return;
+  }
+
+  // ── HERO ──
+  const heroGrid = document.getElementById('heroGrid');
+  const main = articles[0];
+  const sub1 = articles[1];
+  const sub2 = articles[2];
+
+  let heroHtml = `
+    <div class="hero-main" onclick="location.href='${articleUrl(main)}'" style="${coverBg(main)}">
+      ${!main.cover_image_url ? '<div class="hero-main-img"></div>' : ''}
+      <div class="hero-main-overlay"></div>
+      <div class="hero-main-content">
+        <div class="cat-badge">${main.category}</div>
+        ${BADGE[main.author_id] || ''}
+        <div class="card-title-lg">${main.title}</div>
+        <div class="card-desc">${main.description || ''}</div>
+        <div class="card-meta">
+          <span>${fmtDate(main.created_at)}</span>
+          <span class="card-meta-dot"></span>
+          <span>읽는 데 ${main.read_time}분</span>
+        </div>
+      </div>
+    </div>`;
+
+  if (sub1) heroHtml += `
+    <div class="hero-sub" onclick="location.href='${articleUrl(sub1)}'">
+      <div class="hero-sub-img">${sub1.cover_emoji || '📦'}</div>
+      <div class="hero-sub-content">
+        <div class="cat-badge">${sub1.category}</div>
+        ${BADGE[sub1.author_id] || ''}
+        <div class="card-title-md">${sub1.title}</div>
+        <div class="card-meta" style="margin-top:8px;">
+          <span>${fmtDate(sub1.created_at)}</span>
+          <span class="card-meta-dot"></span>
+          <span>${sub1.read_time}분</span>
+        </div>
+      </div>
+    </div>`;
+
+  if (sub2) heroHtml += `
+    <div class="hero-sub" onclick="location.href='${articleUrl(sub2)}'">
+      <div class="hero-sub-img">${sub2.cover_emoji || '📦'}</div>
+      <div class="hero-sub-content">
+        <div class="cat-badge">${sub2.category}</div>
+        ${BADGE[sub2.author_id] || ''}
+        <div class="card-title-md">${sub2.title}</div>
+        <div class="card-meta" style="margin-top:8px;">
+          <span>${fmtDate(sub2.created_at)}</span>
+          <span class="card-meta-dot"></span>
+          <span>${sub2.read_time}분</span>
+        </div>
+      </div>
+    </div>`;
+
+  heroGrid.innerHTML = heroHtml;
+
+  // ── ARTICLE GRID ──
+  const gridArticles = articles.slice(3, 9);
+  if (gridArticles.length === 0) {
+    document.getElementById('articleGrid').innerHTML =
+      '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555;font-size:14px;">더 많은 글이 곧 올라옵니다.</div>';
+  } else {
+    document.getElementById('articleGrid').innerHTML = gridArticles.map(a => `
+      <div class="article-card" onclick="location.href='${articleUrl(a)}'">
+        <div class="article-thumb">${a.cover_emoji || '📦'}</div>
+        <div class="cat-badge">${a.category}</div>
+        ${BADGE[a.author_id] || ''}
+        <div class="card-title-sm">${a.title}</div>
+        <div class="card-desc">${a.description || ''}</div>
+        <div class="card-meta" style="margin-top:auto;padding-top:12px;">
+          <span>${fmtDate(a.created_at)}</span>
+          <span class="card-meta-dot"></span>
+          <span>${a.read_time}분</span>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── PICKS ──
+  const picks = articles.slice(9, 12);
+  if (picks.length > 0) {
+    document.getElementById('picksHeader').style.display = '';
+    document.getElementById('picksList').innerHTML = picks.map((a, i) => `
+      <div class="pick-item" onclick="location.href='${articleUrl(a)}'">
+        <div class="pick-num">0${i+1}</div>
+        <div class="pick-thumb">${a.cover_emoji || '📦'}</div>
+        <div class="pick-info">
+          ${BADGE[a.author_id] || ''}
+          <div class="pick-title" style="margin-top:6px;">${a.title}</div>
+          <div class="card-meta">
+            <span>${a.category}</span>
+            <span class="card-meta-dot"></span>
+            <span>${fmtDate(a.created_at)}</span>
+          </div>
+        </div>
+        <div class="pick-arrow">→</div>
+      </div>`).join('');
+  }
+}
+
+loadMain();
+</script>
 
 <!-- FOOTER -->
 <footer>
