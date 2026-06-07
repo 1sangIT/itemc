@@ -496,8 +496,21 @@ async function loadArticle() {
     <span class="byline-sep">·</span>
     <span class="byline-info">읽는 데 ${a.read_time}분</span>`;
 
-  // Body
-  document.getElementById('articleBody').innerHTML = a.body || '<p style="color:#555;">본문이 없습니다.</p>';
+  // Body + Verdict
+  let bodyHtml = a.body || '<p style="color:#555;">본문이 없습니다.</p>';
+
+  if (a.verdict && a.verdict.length) {
+    const typeClass = { good: 'verdict-good', bad: 'verdict-bad', neutral: '' };
+    const typeSuffix = { good: ' ✓', bad: ' ✗', neutral: '' };
+    const rows = a.verdict.map(r => `
+      <div class="verdict-row">
+        <span class="verdict-label">${esc(r.label)}</span>
+        <span class="verdict-value ${typeClass[r.type] || ''}">${esc(r.value)}${typeSuffix[r.type] || ''}</span>
+      </div>`).join('');
+    bodyHtml += `<div class="verdict"><div class="verdict-title">ITEM C 총평</div>${rows}</div>`;
+  }
+
+  document.getElementById('articleBody').innerHTML = bodyHtml;
 
   // Sidebar
   let sidebarHtml = '';

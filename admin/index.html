@@ -234,6 +234,35 @@
     }
     .toggle.on::after { transform: translateX(18px); }
 
+    /* Verdict builder */
+    .verdict-builder { display: flex; flex-direction: column; gap: 8px; }
+    .verdict-row-input {
+      display: grid; grid-template-columns: 1fr 1fr auto auto;
+      gap: 6px; align-items: center;
+    }
+    .verdict-row-input input { padding: 8px 10px; font-size: 13px; }
+    .verdict-type-btn {
+      padding: 8px 12px; border: 1px solid var(--line);
+      border-radius: 2px; cursor: pointer; font-size: 12px;
+      font-weight: 700; background: var(--bg); color: var(--muted);
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .verdict-type-btn.good { background: rgba(0,229,160,.15); color: var(--green); border-color: var(--green); }
+    .verdict-type-btn.bad { background: rgba(255,77,0,.15); color: var(--accent2); border-color: var(--accent2); }
+    .verdict-del-btn {
+      width: 28px; height: 28px; border: none; background: none;
+      color: var(--muted); cursor: pointer; font-size: 16px;
+      border-radius: 2px; display: flex; align-items: center; justify-content: center;
+    }
+    .verdict-del-btn:hover { color: var(--danger); }
+    .verdict-add-btn {
+      background: none; border: 1px dashed var(--line);
+      color: var(--muted); padding: 8px; width: 100%;
+      border-radius: 2px; cursor: pointer; font-size: 12px;
+      transition: all 0.15s; margin-top: 4px;
+    }
+    .verdict-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
     /* Image upload */
     .upload-area {
       border: 2px dashed var(--line); border-radius: 2px;
@@ -369,6 +398,14 @@
             <label class="form-label">본문</label>
             <div class="quill-wrap">
               <div id="quillEditor"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">ITEM C 총평</label>
+            <div class="sidebar-box" style="background:var(--bg);">
+              <div class="verdict-builder" id="verdictBuilder"></div>
+              <button class="verdict-add-btn" onclick="addVerdictRow()">+ 항목 추가</button>
             </div>
           </div>
         </div>
@@ -545,6 +582,55 @@
     });
   }
 
+  // ── VERDICT BUILDER ──
+  function addVerdictRow(label = '', value = '', type = 'neutral') {
+    const builder = document.getElementById('verdictBuilder');
+    const id = Date.now() + Math.random();
+    const row = document.createElement('div');
+    row.className = 'verdict-row-input';
+    row.dataset.id = id;
+    row.innerHTML = `
+      <input type="text" class="form-input verdict-label-input" placeholder="항목 (예: 필기감)" value="${escAttr(label)}"/>
+      <input type="text" class="form-input verdict-value-input" placeholder="내용 (예: 종이와 구분 안 됨)" value="${escAttr(value)}"/>
+      <button class="verdict-type-btn ${type}" onclick="cycleVerdictType(this)" title="좋음/나쁨/중립 전환">
+        ${type === 'good' ? '✓ 좋음' : type === 'bad' ? '✗ 나쁨' : '― 중립'}
+      </button>
+      <button class="verdict-del-btn" onclick="this.closest('.verdict-row-input').remove()">×</button>`;
+    builder.appendChild(row);
+  }
+
+  function cycleVerdictType(btn) {
+    const types = ['neutral', 'good', 'bad'];
+    const labels = { neutral: '― 중립', good: '✓ 좋음', bad: '✗ 나쁨' };
+    const current = types.find(t => btn.classList.contains(t)) || 'neutral';
+    const next = types[(types.indexOf(current) + 1) % types.length];
+    btn.classList.remove(...types);
+    btn.classList.add(next);
+    btn.textContent = labels[next];
+  }
+
+  function getVerdictData() {
+    const rows = document.querySelectorAll('#verdictBuilder .verdict-row-input');
+    return Array.from(rows).map(row => ({
+      label: row.querySelector('.verdict-label-input').value.trim(),
+      value: row.querySelector('.verdict-value-input').value.trim(),
+      type: ['good','bad'].find(t => row.querySelector('.verdict-type-btn').classList.contains(t)) || 'neutral'
+    })).filter(r => r.label || r.value);
+  }
+
+  function loadVerdictData(data) {
+    document.getElementById('verdictBuilder').innerHTML = '';
+    if (!data || !data.length) {
+      // 기본 5개 항목
+      [['', '', 'good'], ['', '', 'good'], ['', '', 'bad'], ['', '', 'bad'], ['추천 대상', '', 'neutral']]
+        .forEach(([l, v, t]) => addVerdictRow(l, v, t));
+    } else {
+      data.forEach(r => addVerdictRow(r.label, r.value, r.type));
+    }
+  }
+
+  function escAttr(s) { return String(s||'').replace(/"/g,'&quot;'); }
+
   // ── NAVIGATION ──
   function showPanel(name) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -668,6 +754,7 @@
     document.getElementById('fBuyUrl').value = '';
     document.getElementById('fBuyLabel').value = '';
     document.getElementById('fSpecs').value = '';
+    loadVerdictData(null);
     if (quill) quill.clipboard.dangerouslyPasteHTML(ARTICLE_TEMPLATE);
   }
 
@@ -700,6 +787,7 @@
     document.getElementById('fBuyUrl').value = a.buy_url || '';
     document.getElementById('fBuyLabel').value = a.buy_label || '';
     document.getElementById('fSpecs').value = a.specs || '';
+    loadVerdictData(a.verdict || null);
 
     if (quill) quill.clipboard.dangerouslyPasteHTML(a.body || '');
   }
@@ -743,7 +831,8 @@
       published: publish !== undefined ? publish : document.getElementById('fPublished').value === 'true',
       buy_url: document.getElementById('fBuyUrl').value.trim() || null,
       buy_label: document.getElementById('fBuyLabel').value.trim() || null,
-      specs: document.getElementById('fSpecs').value.trim() || null
+      specs: document.getElementById('fSpecs').value.trim() || null,
+      verdict: getVerdictData()
     };
 
     let error;
