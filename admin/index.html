@@ -601,6 +601,36 @@
   }
 
   // ── EDITOR ──
+  const ARTICLE_TEMPLATE = `
+<p>첫 문단 — 이 제품을 왜 다루는지, 어떤 계기로 쓰게 됐는지. 독자가 계속 읽고 싶게 만드는 한 문장으로 시작하세요.</p>
+
+<p>두 번째 문단 — 가격, 포지션, 어떤 사람을 위한 물건인지.</p>
+
+<h2>첫 번째 소제목</h2>
+
+<p>본론 첫 번째. 실제 사용 경험, 수치, 비교.</p>
+
+<blockquote>인상적인 한 문장이나 결정적인 순간을 여기에.</blockquote>
+
+<p>이어지는 내용.</p>
+
+<h2>두 번째 소제목</h2>
+
+<p>아쉬운 점, 한계, 개선이 필요한 부분.</p>
+
+<p>추가 설명.</p>
+
+<div class="verdict">
+<div class="verdict-title">ITEM C 총평</div>
+<div class="verdict-row"><span class="verdict-label">항목 1</span><span class="verdict-value verdict-good">좋은 점 ✓</span></div>
+<div class="verdict-row"><span class="verdict-label">항목 2</span><span class="verdict-value verdict-good">좋은 점 ✓</span></div>
+<div class="verdict-row"><span class="verdict-label">항목 3</span><span class="verdict-value verdict-bad">아쉬운 점 ✗</span></div>
+<div class="verdict-row"><span class="verdict-label">항목 4</span><span class="verdict-value verdict-bad">아쉬운 점 ✗</span></div>
+<div class="verdict-row"><span class="verdict-label">추천 대상</span><span class="verdict-value">어떤 사람에게 맞는지</span></div>
+</div>
+
+<p>마지막 문단 — 결론. 살지 말지 한 줄로 정리.</p>`;
+
   function newArticle() {
     document.getElementById('editingId').value = '';
     document.getElementById('editorTitle').textContent = '새 글쓰기';
@@ -615,7 +645,7 @@
     document.getElementById('fAuthor').value = 'K';
     document.getElementById('uploadPreview').classList.remove('show');
     document.getElementById('publishToggle').classList.remove('on');
-    if (quill) quill.setContents([]);
+    if (quill) quill.clipboard.dangerouslyPasteHTML(ARTICLE_TEMPLATE);
   }
 
   async function editArticle(id) {
