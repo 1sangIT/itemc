@@ -471,7 +471,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
   // ── CONFIG ──
-  const SUPABASE_URL = 'https://axgiamwbkwjivbmfvwww.supabase.co';
+  const SUPABASE_URL = 'https://axgiamwbkwjivbmfvvww.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z2lhbXdia3dqaXZibWZ2dnd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3OTAxNjEsImV4cCI6MjA5NjM2NjE2MX0.fz9iaZa9NCzLkszEnvqxBhdaFwj2J0tR6QFZH13Pwwo';
   const ADMIN_PASSWORD = 'itemc2026'; // ← 원하는 비밀번호로 변경
 
@@ -622,34 +622,34 @@
 
   // ── EDITOR ──
   const ARTICLE_TEMPLATE = `
-<p>첫 문단 — 이 제품을 왜 다루는지, 어떤 계기로 쓰게 됐는지. 독자가 계속 읽고 싶게 만드는 한 문장으로 시작하세요.</p>
+<p>[솔직히 말하면, 처음엔 살 생각이 없었다. — 이 제품을 왜 쓰게 됐는지 한 줄로 시작하세요.]</p>
 
-<p>두 번째 문단 — 가격, 포지션, 어떤 사람을 위한 물건인지.</p>
+<p>[가격은 얼마다. 어떤 사람을 위한 물건인지. 이미 비슷한 걸 가진 사람이라면 굳이 살 이유가 있는지.]</p>
 
-<h2>첫 번째 소제목</h2>
+<h2>[첫 번째 소제목 — 핵심 경험]</h2>
 
-<p>본론 첫 번째. 실제 사용 경험, 수치, 비교.</p>
+<p>[제품이 내세우는 핵심 기능을 직접 써본 느낌. 수치나 비교가 있으면 더 좋다.]</p>
 
-<blockquote>인상적인 한 문장이나 결정적인 순간을 여기에.</blockquote>
+<blockquote>[결정적인 한 문장. 쓰다가 "아, 이게 이 제품의 핵심이구나" 싶었던 순간.]</blockquote>
 
-<p>이어지는 내용.</p>
+<p>[이어지는 사용 경험. 어떤 상황에서 잘 맞는지, 어떤 상황에서 한계가 오는지.]</p>
 
-<h2>두 번째 소제목</h2>
+<h2>[두 번째 소제목 — 아쉬운 점]</h2>
 
-<p>아쉬운 점, 한계, 개선이 필요한 부분.</p>
+<p>[솔직하게 아쉬운 것들. 가격, 기능 부재, 경쟁 제품 대비 약한 부분.]</p>
 
-<p>추가 설명.</p>
+<p>[추가로 걸리는 점. 구독, 액세서리 비용, 소프트웨어 한계 등.]</p>
 
 <div class="verdict">
 <div class="verdict-title">ITEM C 총평</div>
-<div class="verdict-row"><span class="verdict-label">항목 1</span><span class="verdict-value verdict-good">좋은 점 ✓</span></div>
-<div class="verdict-row"><span class="verdict-label">항목 2</span><span class="verdict-value verdict-good">좋은 점 ✓</span></div>
-<div class="verdict-row"><span class="verdict-label">항목 3</span><span class="verdict-value verdict-bad">아쉬운 점 ✗</span></div>
-<div class="verdict-row"><span class="verdict-label">항목 4</span><span class="verdict-value verdict-bad">아쉬운 점 ✗</span></div>
-<div class="verdict-row"><span class="verdict-label">추천 대상</span><span class="verdict-value">어떤 사람에게 맞는지</span></div>
+<div class="verdict-row"><span class="verdict-label">[항목]</span><span class="verdict-value verdict-good">[좋은 점] ✓</span></div>
+<div class="verdict-row"><span class="verdict-label">[항목]</span><span class="verdict-value verdict-good">[좋은 점] ✓</span></div>
+<div class="verdict-row"><span class="verdict-label">[항목]</span><span class="verdict-value verdict-bad">[아쉬운 점] ✗</span></div>
+<div class="verdict-row"><span class="verdict-label">[항목]</span><span class="verdict-value verdict-bad">[아쉬운 점] ✗</span></div>
+<div class="verdict-row"><span class="verdict-label">추천 대상</span><span class="verdict-value">[이런 사람에게 맞다]</span></div>
 </div>
 
-<p>마지막 문단 — 결론. 살지 말지 한 줄로 정리.</p>`;
+<p>[결론 한 줄. 나는 3개월째 매일 쓰고 있다 — 이런 식으로 살지 말지를 명확하게.]</p>`;
 
   function newArticle() {
     document.getElementById('editingId').value = '';
