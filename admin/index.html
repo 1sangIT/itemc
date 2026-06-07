@@ -835,18 +835,22 @@
       verdict: getVerdictData()
     };
 
-    let error;
+    let error, data;
     if (id) {
       ({ error } = await sb.from('articles').update(payload).eq('id', id));
     } else {
-      ({ error } = await sb.from('articles').insert(payload));
+      ({ data, error } = await sb.from('articles').insert(payload).select('id').single());
+      if (data?.id) document.getElementById('editingId').value = data.id;
     }
 
     if (error) {
       toast('저장 실패: ' + error.message, 'error');
-    } else {
-      toast(publish ? '발행되었습니다 ✓' : '임시저장 완료 ✓', 'success');
+    } else if (publish) {
+      toast('발행되었습니다 ✓', 'success');
       showPanel('articles');
+    } else {
+      toast('임시저장 완료 ✓', 'success');
+      // 에디터 유지 — 이동하지 않음
     }
   }
 
