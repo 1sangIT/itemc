@@ -499,10 +499,32 @@ async function loadArticle() {
   // Body
   document.getElementById('articleBody').innerHTML = a.body || '<p style="color:#555;">본문이 없습니다.</p>';
 
-  // Sidebar (구매 링크 없이 기본 박스만)
-  document.getElementById('articleSidebar').innerHTML = `
-    <div class="sidebar-box">
-      <div class="sidebar-title">${a.category}</div>
+  // Sidebar
+  let sidebarHtml = '';
+
+  if (a.specs) {
+    const rows = a.specs.split('\n').filter(l => l.includes(':')).map(l => {
+      const idx = l.indexOf(':');
+      const label = l.slice(0, idx).trim();
+      const value = l.slice(idx + 1).trim();
+      return `<div class="sidebar-spec-row">
+        <span class="sidebar-spec-label">${esc(label)}</span>
+        <span class="sidebar-spec-value">${esc(value)}</span>
+      </div>`;
+    }).join('');
+    sidebarHtml += `<div class="sidebar-box"><div class="sidebar-title">제품 스펙</div>${rows}</div>`;
+  }
+
+  if (a.buy_url) {
+    const label = a.buy_label || '가격 확인 →';
+    sidebarHtml += `
+      <a href="${esc(a.buy_url)}" target="_blank" rel="noopener" class="buy-btn">${esc(label)}</a>
+      <div class="buy-btn-sub">파트너스 활동으로 수수료를 받을 수 있습니다</div>`;
+  }
+
+  if (!sidebarHtml) {
+    sidebarHtml = `<div class="sidebar-box">
+      <div class="sidebar-title">${esc(a.category)}</div>
       <div class="sidebar-spec-row">
         <span class="sidebar-spec-label">에디터</span>
         <span class="sidebar-spec-value">${BADGE[a.author_id] || a.author_id}</span>
@@ -511,11 +533,10 @@ async function loadArticle() {
         <span class="sidebar-spec-label">읽는 시간</span>
         <span class="sidebar-spec-value">${a.read_time}분</span>
       </div>
-      <div class="sidebar-spec-row">
-        <span class="sidebar-spec-label">발행일</span>
-        <span class="sidebar-spec-value">${fmtDate(a.created_at)}</span>
-      </div>
     </div>`;
+  }
+
+  document.getElementById('articleSidebar').innerHTML = sidebarHtml;
 
   // Related
   const { data: related } = await sb.from('articles')

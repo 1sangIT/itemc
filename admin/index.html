@@ -396,6 +396,26 @@
           </div>
 
           <div class="sidebar-box">
+            <div class="sidebar-box-title">구매 링크</div>
+            <div class="form-group">
+              <label class="form-label">버튼 텍스트</label>
+              <input type="text" class="form-input" id="fBuyLabel" placeholder="쿠팡에서 가격 확인 →"/>
+            </div>
+            <div class="form-group" style="margin-top:10px;">
+              <label class="form-label">URL</label>
+              <input type="text" class="form-input" id="fBuyUrl" placeholder="https://..."/>
+            </div>
+          </div>
+
+          <div class="sidebar-box">
+            <div class="sidebar-box-title">제품 스펙</div>
+            <div class="form-group">
+              <label class="form-label">한 줄에 하나씩 — 항목: 값</label>
+              <textarea class="form-input" id="fSpecs" rows="6" placeholder="화면: 11.8&quot; E Ink&#10;해상도: 2160 × 1620&#10;배터리: 최대 2주&#10;무게: 490g&#10;가격: ₩599,000~" style="resize:vertical;"></textarea>
+            </div>
+          </div>
+
+          <div class="sidebar-box">
             <div class="sidebar-box-title">메타 정보</div>
             <div class="form-group" style="margin-bottom:10px;">
               <label class="form-label">슬러그 (URL)</label>
@@ -645,6 +665,9 @@
     document.getElementById('fAuthor').value = 'K';
     document.getElementById('uploadPreview').classList.remove('show');
     document.getElementById('publishToggle').classList.remove('on');
+    document.getElementById('fBuyUrl').value = '';
+    document.getElementById('fBuyLabel').value = '';
+    document.getElementById('fSpecs').value = '';
     if (quill) quill.clipboard.dangerouslyPasteHTML(ARTICLE_TEMPLATE);
   }
 
@@ -673,6 +696,10 @@
       preview.src = a.cover_image_url;
       preview.classList.add('show');
     }
+
+    document.getElementById('fBuyUrl').value = a.buy_url || '';
+    document.getElementById('fBuyLabel').value = a.buy_label || '';
+    document.getElementById('fSpecs').value = a.specs || '';
 
     if (quill) quill.clipboard.dangerouslyPasteHTML(a.body || '');
   }
@@ -713,7 +740,10 @@
       category: document.getElementById('fCategory').value,
       author_id: document.getElementById('fAuthor').value,
       read_time: parseInt(document.getElementById('fReadTime').value) || 5,
-      published: publish !== undefined ? publish : document.getElementById('fPublished').value === 'true'
+      published: publish !== undefined ? publish : document.getElementById('fPublished').value === 'true',
+      buy_url: document.getElementById('fBuyUrl').value.trim() || null,
+      buy_label: document.getElementById('fBuyLabel').value.trim() || null,
+      specs: document.getElementById('fSpecs').value.trim() || null
     };
 
     let error;
