@@ -64,6 +64,12 @@
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       display: flex; align-items: center; justify-content: center;
       font-size: 200px; opacity: 0.12;
+      background-size: cover;
+      background-position: center;
+    }
+    .article-hero-bg.has-image {
+      opacity: 1;
+      font-size: 0;
     }
     .article-hero-overlay {
       position: absolute; inset: 0;
@@ -541,12 +547,12 @@ async function loadArticle() {
   document.title = a.title + ' — ITEM C';
 
   // Hero
-  document.getElementById('heroBg').textContent = a.cover_emoji || '📦';
+  const heroBg = document.getElementById('heroBg');
   if (a.cover_image_url) {
-    document.getElementById('articleHero').style.backgroundImage = `url('${a.cover_image_url}')`;
-    document.getElementById('articleHero').style.backgroundSize = 'cover';
-    document.getElementById('articleHero').style.backgroundPosition = 'center';
-    document.getElementById('heroBg').style.display = 'none';
+    heroBg.style.backgroundImage = `url('${a.cover_image_url}')`;
+    heroBg.classList.add('has-image');
+  } else {
+    heroBg.textContent = a.cover_emoji || '📦';
   }
   document.getElementById('heroCat').textContent = a.category;
   document.getElementById('heroTitle').textContent = a.title;

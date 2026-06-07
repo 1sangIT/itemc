@@ -124,6 +124,10 @@
       font-size: 80px;
       display: flex; align-items: center; justify-content: center;
     }
+    .hero-sub-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.4) 60%, transparent 100%);
+    }
     .hero-sub-content { position: relative; z-index: 1; }
 
     /* ── BADGES ── */
@@ -508,35 +512,29 @@ async function loadMain() {
       </div>
     </div>`;
 
-  if (sub1) heroHtml += `
-    <div class="hero-sub" onclick="location.href='${articleUrl(sub1)}'">
-      <div class="hero-sub-img">${sub1.cover_emoji || '📦'}</div>
+  function subCardHtml(a) {
+    const bgStyle = a.cover_image_url ? `style="background:url('${a.cover_image_url}') center/cover"` : '';
+    const imgEl = a.cover_image_url
+      ? '<div class="hero-sub-overlay"></div>'
+      : `<div class="hero-sub-img">${a.cover_emoji || '📦'}</div>`;
+    return `
+    <div class="hero-sub" onclick="location.href='${articleUrl(a)}'" ${bgStyle}>
+      ${imgEl}
       <div class="hero-sub-content">
-        <div class="cat-badge">${sub1.category}</div>
-        ${BADGE[sub1.author_id] || ''}
-        <div class="card-title-md">${sub1.title}</div>
+        <div class="cat-badge">${a.category}</div>
+        ${BADGE[a.author_id] || ''}
+        <div class="card-title-md">${a.title}</div>
         <div class="card-meta" style="margin-top:8px;">
-          <span>${fmtDate(sub1.created_at)}</span>
+          <span>${fmtDate(a.created_at)}</span>
           <span class="card-meta-dot"></span>
-          <span>${sub1.read_time}분</span>
+          <span>${a.read_time}분</span>
         </div>
       </div>
     </div>`;
+  }
 
-  if (sub2) heroHtml += `
-    <div class="hero-sub" onclick="location.href='${articleUrl(sub2)}'">
-      <div class="hero-sub-img">${sub2.cover_emoji || '📦'}</div>
-      <div class="hero-sub-content">
-        <div class="cat-badge">${sub2.category}</div>
-        ${BADGE[sub2.author_id] || ''}
-        <div class="card-title-md">${sub2.title}</div>
-        <div class="card-meta" style="margin-top:8px;">
-          <span>${fmtDate(sub2.created_at)}</span>
-          <span class="card-meta-dot"></span>
-          <span>${sub2.read_time}분</span>
-        </div>
-      </div>
-    </div>`;
+  if (sub1) heroHtml += subCardHtml(sub1);
+  if (sub2) heroHtml += subCardHtml(sub2);
 
   heroGrid.innerHTML = heroHtml;
 
