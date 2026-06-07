@@ -546,7 +546,7 @@ async function loadMain() {
   } else {
     document.getElementById('articleGrid').innerHTML = gridArticles.map(a => `
       <div class="article-card" onclick="location.href='${articleUrl(a)}'">
-        <div class="article-thumb">${a.cover_emoji || '📦'}</div>
+        <div class="article-thumb" ${a.cover_image_url ? `style="background:url('${a.cover_image_url}') center/cover;opacity:1;font-size:0;"` : ''}>${a.cover_image_url ? '' : (a.cover_emoji || '📦')}</div>
         <div class="cat-badge">${a.category}</div>
         ${BADGE[a.author_id] || ''}
         <div class="card-title-sm">${a.title}</div>

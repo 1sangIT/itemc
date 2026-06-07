@@ -651,7 +651,7 @@ async function loadArticle() {
     document.getElementById('relatedSection').style.display = '';
     document.getElementById('relatedGrid').innerHTML = related.map(r => `
       <div class="related-card" onclick="location.href='article.html?slug=${encodeURIComponent(r.slug)}'">
-        <div class="related-thumb">${r.cover_emoji || '📦'}</div>
+        <div class="related-thumb" ${r.cover_image_url ? `style="background:url('${r.cover_image_url}') center/cover;opacity:1;font-size:0;"` : ''}>${r.cover_image_url ? '' : (r.cover_emoji || '📦')}</div>
         ${BADGE[r.author_id] || ''}
         <div class="related-card-title" style="margin-top:8px;">${r.title}</div>
         <div class="related-meta">${fmtDate(r.created_at)} · ${r.read_time}분</div>
