@@ -441,9 +441,10 @@
     <h2>매주 목요일, 살 거리를 알려드립니다</h2>
     <p>에디터 3인의 직접 구매 후기 + 이번 주 핫딜을 이메일로 받아보세요.</p>
     <div class="newsletter-form">
-      <input type="email" placeholder="이메일 주소를 입력하세요" />
-      <button>구독하기</button>
+      <input type="email" id="subEmail" placeholder="이메일 주소를 입력하세요" />
+      <button id="subBtn" onclick="subscribe()">구독하기</button>
     </div>
+    <div id="subMsg" style="margin-top:12px;font-size:13px;display:none;"></div>
   </div>
 
 </main>
@@ -582,6 +583,35 @@ async function loadMain() {
 }
 
 loadMain();
+
+async function subscribe() {
+  const email = document.getElementById('subEmail').value.trim();
+  const msg = document.getElementById('subMsg');
+  const btn = document.getElementById('subBtn');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.style.display = '';
+    msg.style.color = '#ff4d00';
+    msg.textContent = '올바른 이메일 주소를 입력해주세요.';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '처리 중...';
+  const { error } = await sb.from('subscribers').insert({ email });
+  msg.style.display = '';
+  if (!error) {
+    msg.style.color = '#e8ff00';
+    msg.textContent = '✓ 구독 완료! 매주 목요일 아침 받아보실 수 있어요.';
+    document.getElementById('subEmail').value = '';
+  } else if (error.code === '23505') {
+    msg.style.color = '#888';
+    msg.textContent = '이미 구독 중인 이메일입니다.';
+  } else {
+    msg.style.color = '#ff4d00';
+    msg.textContent = '오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+  }
+  btn.disabled = false;
+  btn.textContent = '구독하기';
+}
 </script>
 
 <!-- FOOTER -->
