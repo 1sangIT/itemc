@@ -263,6 +263,19 @@
     }
     .verdict-add-btn:hover { border-color: var(--accent); color: var(--accent); }
 
+    /* Review links builder */
+    .review-link-row {
+      display: flex; flex-direction: column; gap: 6px;
+      padding: 12px; background: var(--bg);
+      border: 1px solid var(--line); border-radius: 2px;
+      margin-bottom: 8px; position: relative;
+    }
+    .review-link-row-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 2px;
+    }
+    .review-link-num { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1px; }
+
     /* Image upload */
     .upload-area {
       border: 2px dashed var(--line); border-radius: 2px;
@@ -430,6 +443,19 @@
             <input type="hidden" id="fCoverImageUrl"/>
             <div style="margin-top:10px; font-size:11px; color:var(--muted);">또는 커버 이모지</div>
             <input type="text" class="form-input" id="fCoverEmoji" placeholder="📦" style="margin-top:6px; font-size:20px; text-align:center; width:60px;"/>
+          </div>
+
+          <div class="sidebar-box">
+            <div class="sidebar-box-title">유튜브 영상</div>
+            <div class="form-group">
+              <input type="text" class="form-input" id="fYoutubeUrl" placeholder="https://youtu.be/... 또는 youtube.com/watch?v=..."/>
+            </div>
+          </div>
+
+          <div class="sidebar-box">
+            <div class="sidebar-box-title">이 제품 더 보기 (최대 3개)</div>
+            <div id="reviewLinksBuilder"></div>
+            <button class="verdict-add-btn" id="addReviewBtn" onclick="addReviewLink()">+ 링크 추가</button>
           </div>
 
           <div class="sidebar-box">
@@ -631,6 +657,49 @@
 
   function escAttr(s) { return String(s||'').replace(/"/g,'&quot;'); }
 
+  // ── REVIEW LINKS ──
+  function addReviewLink(title = '', source = '', url = '') {
+    const builder = document.getElementById('reviewLinksBuilder');
+    const count = builder.querySelectorAll('.review-link-row').length;
+    if (count >= 3) { toast('최대 3개까지 추가할 수 있습니다.', ''); return; }
+    if (count >= 2) document.getElementById('addReviewBtn').style.display = 'none';
+
+    const row = document.createElement('div');
+    row.className = 'review-link-row';
+    row.innerHTML = `
+      <div class="review-link-row-header">
+        <span class="review-link-num">링크 ${count + 1}</span>
+        <button class="verdict-del-btn" onclick="removeReviewLink(this)">×</button>
+      </div>
+      <input type="text" class="form-input review-link-title" placeholder="제목 (예: reMarkable 실사용 6개월)" value="${escAttr(title)}"/>
+      <input type="text" class="form-input review-link-source" placeholder="출처 (예: 유튜브, The Verge)" value="${escAttr(source)}"/>
+      <input type="text" class="form-input review-link-url" placeholder="URL" value="${escAttr(url)}"/>`;
+    builder.appendChild(row);
+  }
+
+  function removeReviewLink(btn) {
+    btn.closest('.review-link-row').remove();
+    document.getElementById('addReviewBtn').style.display = '';
+    // 번호 재정렬
+    document.querySelectorAll('#reviewLinksBuilder .review-link-num')
+      .forEach((el, i) => el.textContent = `링크 ${i + 1}`);
+  }
+
+  function getReviewLinks() {
+    return Array.from(document.querySelectorAll('#reviewLinksBuilder .review-link-row'))
+      .map(row => ({
+        title: row.querySelector('.review-link-title').value.trim(),
+        source: row.querySelector('.review-link-source').value.trim(),
+        url: row.querySelector('.review-link-url').value.trim()
+      })).filter(r => r.url);
+  }
+
+  function loadReviewLinks(data) {
+    document.getElementById('reviewLinksBuilder').innerHTML = '';
+    document.getElementById('addReviewBtn').style.display = '';
+    (data || []).forEach(r => addReviewLink(r.title, r.source, r.url));
+  }
+
   // ── NAVIGATION ──
   function showPanel(name) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -751,10 +820,12 @@
     document.getElementById('fAuthor').value = 'K';
     document.getElementById('uploadPreview').classList.remove('show');
     document.getElementById('publishToggle').classList.remove('on');
+    document.getElementById('fYoutubeUrl').value = '';
     document.getElementById('fBuyUrl').value = '';
     document.getElementById('fBuyLabel').value = '';
     document.getElementById('fSpecs').value = '';
     loadVerdictData(null);
+    loadReviewLinks(null);
     if (quill) quill.clipboard.dangerouslyPasteHTML(ARTICLE_TEMPLATE);
   }
 
@@ -784,10 +855,12 @@
       preview.classList.add('show');
     }
 
+    document.getElementById('fYoutubeUrl').value = a.youtube_url || '';
     document.getElementById('fBuyUrl').value = a.buy_url || '';
     document.getElementById('fBuyLabel').value = a.buy_label || '';
     document.getElementById('fSpecs').value = a.specs || '';
     loadVerdictData(a.verdict || null);
+    loadReviewLinks(a.review_links || null);
 
     if (quill) quill.clipboard.dangerouslyPasteHTML(a.body || '');
   }
@@ -832,7 +905,9 @@
       buy_url: document.getElementById('fBuyUrl').value.trim() || null,
       buy_label: document.getElementById('fBuyLabel').value.trim() || null,
       specs: document.getElementById('fSpecs').value.trim() || null,
-      verdict: getVerdictData()
+      verdict: getVerdictData(),
+      youtube_url: document.getElementById('fYoutubeUrl').value.trim() || null,
+      review_links: getReviewLinks()
     };
 
     let error, data;
