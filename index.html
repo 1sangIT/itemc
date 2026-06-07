@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ITEM C — 물건을 읽는 매거진</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Bebas+Neue&family=Inter:wght@400;500;600;700;900&display=swap');
+
+    :root {
+      --bg: #0a0a0a;
+      --card: #141414;
+      --card2: #1a1a1a;
+      --text: #f0f0f0;
+      --muted: #888;
+      --line: #2a2a2a;
+      --accent: #e8ff00;
+      --accent2: #ff4d00;
+      --r: 4px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,10,.92);
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; letter-spacing: 3px;
+      color: var(--accent);
+    }
+    .logo span { color: var(--text); }
+    .tagline {
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    nav { display: flex; gap: 28px; }
+    nav a {
+      font-size: 13px; font-weight: 700; color: var(--muted);
+      letter-spacing: 0.5px; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 1200px; margin: 0 auto; padding: 60px 24px 40px;
+    }
+    .hero-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 900; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .hero-label::before {
+      content: '';
+      width: 24px; height: 2px; background: var(--accent);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 2px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    .hero-main {
+      grid-column: 1; grid-row: 1 / 3;
+      background: var(--card);
+      position: relative; overflow: hidden;
+      min-height: 520px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .hero-main:hover { opacity: .9; }
+    .hero-main-img {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    .hero-main-img::after {
+      content: '📱';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -70%);
+      font-size: 120px; opacity: 0.15;
+    }
+    .hero-main-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.3) 50%, transparent 100%);
+    }
+    .hero-main-content {
+      position: relative; z-index: 1;
+      padding: 28px;
+    }
+    .hero-sub {
+      background: var(--card);
+      padding: 28px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      min-height: 256px; cursor: pointer;
+      position: relative; overflow: hidden;
+      transition: background 0.2s;
+    }
+    .hero-sub:hover { background: var(--card2); }
+    .hero-sub-img {
+      position: absolute; inset: 0; opacity: 0.08;
+      font-size: 80px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-sub-content { position: relative; z-index: 1; }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 900; letter-spacing: 1px;
+      padding: 3px 8px; border-radius: 2px;
+      margin-bottom: 10px;
+    }
+    .badge-K { background: var(--accent); color: #000; }
+    .badge-G { background: #00e5a0; color: #000; }
+    .badge-B { background: var(--accent2); color: #fff; }
+
+    .cat-badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted);
+      border: 1px solid var(--line); padding: 2px 8px; border-radius: 2px;
+      margin-bottom: 8px;
+    }
+
+    .card-title-lg {
+      font-size: 26px; font-weight: 900; line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .card-title-md {
+      font-size: 18px; font-weight: 900; line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .card-desc {
+      font-size: 13px; color: var(--muted); line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .card-meta {
+      font-size: 11px; color: #555;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .card-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: #555; }
+
+    /* ── MAIN CONTENT ── */
+    .main { max-width: 1200px; margin: 0 auto; padding: 60px 24px; }
+
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .section-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; font-weight: 900; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--text);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before {
+      content: '';
+      width: 3px; height: 16px; background: var(--accent);
+      border-radius: 2px;
+    }
+    .see-all {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      letter-spacing: 1px; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .see-all:hover { color: var(--accent); }
+
+    /* ── ARTICLE GRID ── */
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--line);
+      margin-bottom: 60px;
+    }
+    .article-card {
+      background: var(--card);
+      padding: 24px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .article-card:hover { background: var(--card2); }
+    .article-thumb {
+      width: 100%; aspect-ratio: 16/9;
+      border-radius: 2px; margin-bottom: 16px;
+      background: #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; opacity: 0.6;
+    }
+    .article-card .card-title-sm {
+      font-size: 16px; font-weight: 900; line-height: 1.4;
+      margin-bottom: 8px; flex: 1;
+    }
+
+    /* ── EDITOR PICKS ── */
+    .picks-list {
+      display: flex; flex-direction: column;
+      gap: 2px; background: var(--line);
+      margin-bottom: 60px;
+    }
+    .pick-item {
+      background: var(--card);
+      padding: 20px 24px;
+      display: flex; align-items: center; gap: 20px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .pick-item:hover { background: var(--card2); }
+    .pick-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px; color: var(--line);
+      width: 48px; flex-shrink: 0; text-align: center;
+      line-height: 1;
+    }
+    .pick-thumb {
+      width: 72px; height: 72px; border-radius: 2px;
+      background: #1a1a2e; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    .pick-info { flex: 1; }
+    .pick-title {
+      font-size: 15px; font-weight: 900; line-height: 1.3;
+      margin-bottom: 6px;
+    }
+    .pick-arrow {
+      font-size: 18px; color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    /* ── NEWSLETTER ── */
+    .newsletter {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 48px;
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .newsletter-label {
+      font-size: 11px; font-weight: 900; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .newsletter h2 {
+      font-size: 28px; font-weight: 900; margin-bottom: 10px;
+    }
+    .newsletter p {
+      font-size: 14px; color: var(--muted); margin-bottom: 28px;
+    }
+    .newsletter-form {
+      display: flex; gap: 0; max-width: 440px; margin: 0 auto;
+    }
+    .newsletter-form input {
+      flex: 1; padding: 14px 18px;
+      background: #0a0a0a; border: 1px solid var(--line);
+      border-right: none; border-radius: 2px 0 0 2px;
+      color: var(--text); font-family: inherit; font-size: 14px;
+      outline: none;
+    }
+    .newsletter-form input:focus { border-color: var(--accent); }
+    .newsletter-form button {
+      padding: 14px 24px;
+      background: var(--accent); color: #000;
+      border: none; font-weight: 900; font-size: 13px;
+      letter-spacing: 1px; cursor: pointer;
+      border-radius: 0 2px 2px 0; font-family: inherit;
+      transition: opacity 0.2s;
+    }
+    .newsletter-form button:hover { opacity: 0.85; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 32px 24px;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px; letter-spacing: 3px;
+      color: var(--accent);
+    }
+    .footer-copy { font-size: 12px; color: #444; }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .mobile-nav {
+      display: none;
+      position: fixed; inset: 0; top: 60px;
+      background: rgba(10,10,10,.98);
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 32px; z-index: 99;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 24px; font-weight: 900; color: var(--muted);
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .mobile-nav a:hover { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .tagline { display: none; }
+      nav { display: none; }
+      .hamburger { display: flex; }
+
+      .hero { padding: 32px 16px 24px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-main { grid-row: auto; min-height: 280px; }
+      .card-title-lg { font-size: 20px; }
+      .hero-main-content { padding: 20px; }
+      .hero-sub { min-height: 180px; padding: 20px; }
+      .card-title-md { font-size: 15px; }
+
+      .main { padding: 40px 16px; }
+      .article-grid { grid-template-columns: 1fr; }
+
+      .pick-item { padding: 16px; gap: 12px; }
+      .pick-num { font-size: 28px; width: 36px; }
+      .pick-thumb { width: 56px; height: 56px; font-size: 22px; }
+      .pick-title { font-size: 14px; }
+
+      .newsletter { padding: 32px 16px; }
+      .newsletter h2 { font-size: 20px; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-form input {
+        border-right: 1px solid var(--line);
+        border-bottom: none;
+        border-radius: 2px 2px 0 0;
+      }
+      .newsletter-form button { border-radius: 0 0 2px 2px; }
+
+      .footer-inner { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="logo">ITEM<span> C</span></div>
+    </div>
+    <div class="tagline">물건을 읽는 매거진</div>
+    <nav>
+      <a href="#" class="active">전체</a>
+      <a href="#">가젯</a>
+      <a href="#">라이프</a>
+      <a href="#">리뷰</a>
+      <a href="#">뉴스레터</a>
+    </nav>
+    <button class="hamburger" id="menuBtn" aria-label="메뉴">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobileNav">
+  <a href="#" onclick="closeMobileNav()">전체</a>
+  <a href="#" onclick="closeMobileNav()">가젯</a>
+  <a href="#" onclick="closeMobileNav()">라이프</a>
+  <a href="#" onclick="closeMobileNav()">리뷰</a>
+  <a href="#" onclick="closeMobileNav()">뉴스레터</a>
+</nav>
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileNav = document.getElementById('mobileNav');
+  menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
+  function closeMobileNav() { mobileNav.classList.remove('open'); }
+</script>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-label">이번 주 에디터 픽</div>
+  <div class="hero-grid">
+
+    <!-- 메인 피처 -->
+    <div class="hero-main">
+      <div class="hero-main-img"></div>
+      <div class="hero-main-overlay"></div>
+      <div class="hero-main-content">
+        <div class="cat-badge">가젯</div>
+        <div class="badge badge-K">✍ 편집장 K</div>
+        <div class="card-title-lg">reMarkable Paper Pro<br>3개월 실사용 후기</div>
+        <div class="card-desc">국내 출시 전에 써봤다. E잉크 태블릿의 끝판왕인가, 아니면 30만원짜리 메모장인가.</div>
+        <div class="card-meta">
+          <span>2026. 06. 07</span>
+          <span class="card-meta-dot"></span>
+          <span>읽는 데 8분</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 서브 1 -->
+    <div class="hero-sub">
+      <div class="hero-sub-img">🎧</div>
+      <div class="hero-sub-content">
+        <div class="cat-badge">오디오</div>
+        <div class="badge badge-G">💰 에디터 G</div>
+        <div class="card-title-md">소니 WH-1000XM6 vs 에어팟 맥스<br>반값으로 더 잘 들린다</div>
+        <div class="card-meta" style="margin-top:8px;">
+          <span>2026. 06. 05</span>
+          <span class="card-meta-dot"></span>
+          <span>6분</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 서브 2 -->
+    <div class="hero-sub">
+      <div class="hero-sub-img">💻</div>
+      <div class="hero-sub-content">
+        <div class="cat-badge">노트북</div>
+        <div class="badge badge-B">🔪 에디터 B</div>
+        <div class="card-title-md">맥북 에어 M4 — 칭찬하기 싫은데<br>어쩔 수 없다</div>
+        <div class="card-meta" style="margin-top:8px;">
+          <span>2026. 06. 03</span>
+          <span class="card-meta-dot"></span>
+          <span>5분</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- 최신 아티클 -->
+  <div class="section-header">
+    <div class="section-title">최신 아티클</div>
+    <a href="#" class="see-all">전체 보기 →</a>
+  </div>
+
+  <div class="article-grid">
+    <div class="article-card">
+      <div class="article-thumb">⌚</div>
+      <div class="cat-badge">웨어러블</div>
+      <div class="badge badge-K">✍ 편집장 K</div>
+      <div class="card-title-sm">갤럭시 워치 Ultra 2 — 이번엔 진짜 울트라가 맞다</div>
+      <div class="card-desc">전작의 배터리 문제를 완전히 잡았다. 가격이 문제지.</div>
+      <div class="card-meta" style="margin-top:auto; padding-top:12px;">
+        <span>2026. 06. 01</span><span class="card-meta-dot"></span><span>7분</span>
+      </div>
+    </div>
+    <div class="article-card">
+      <div class="article-thumb">🖨️</div>
+      <div class="cat-badge">홈오피스</div>
+      <div class="badge badge-G">💰 에디터 G</div>
+      <div class="card-title-sm">프린터는 왜 다 비쌀까 — 3만원대 정답이 있다</div>
+      <div class="card-desc">잉크젯 말고 레이저. 초기 비용이 전부다.</div>
+      <div class="card-meta" style="margin-top:auto; padding-top:12px;">
+        <span>2026. 05. 28</span><span class="card-meta-dot"></span><span>4분</span>
+      </div>
+    </div>
+    <div class="article-card">
+      <div class="article-thumb">📷</div>
+      <div class="cat-badge">카메라</div>
+      <div class="badge badge-B">🔪 에디터 B</div>
+      <div class="card-title-sm">소니 ZV-E10 II — 유튜버를 위한다는 카메라의 민낯</div>
+      <div class="card-desc">마케팅이 너무 앞서간다. 실제로 써보면 알 것들.</div>
+      <div class="card-meta" style="margin-top:auto; padding-top:12px;">
+        <span>2026. 05. 25</span><span class="card-meta-dot"></span><span>6분</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 에디터 픽 랭킹 -->
+  <div class="section-header">
+    <div class="section-title">이달의 강력 추천</div>
+  </div>
+  <div class="picks-list">
+    <div class="pick-item">
+      <div class="pick-num">01</div>
+      <div class="pick-thumb">📱</div>
+      <div class="pick-info">
+        <div class="badge badge-K" style="margin-bottom:6px;">✍ 편집장 K</div>
+        <div class="pick-title">아이패드 미니 7 — 가장 완성된 폼팩터</div>
+        <div class="card-meta"><span>가젯</span><span class="card-meta-dot"></span><span>2026. 05. 20</span></div>
+      </div>
+      <div class="pick-arrow">→</div>
+    </div>
+    <div class="pick-item">
+      <div class="pick-num">02</div>
+      <div class="pick-thumb">🎵</div>
+      <div class="pick-info">
+        <div class="badge badge-G" style="margin-bottom:6px;">💰 에디터 G</div>
+        <div class="pick-title">샤오미 버즈 5 Pro — ANC 성능 상위 10%인데 6만원</div>
+        <div class="card-meta"><span>오디오</span><span class="card-meta-dot"></span><span>2026. 05. 15</span></div>
+      </div>
+      <div class="pick-arrow">→</div>
+    </div>
+    <div class="pick-item">
+      <div class="pick-num">03</div>
+      <div class="pick-thumb">🖥️</div>
+      <div class="pick-info">
+        <div class="badge badge-B" style="margin-bottom:6px;">🔪 에디터 B</div>
+        <div class="pick-title">LG 그램 Pro 2026 — 가볍다는 것 말고 내세울 게 없다</div>
+        <div class="card-meta"><span>노트북</span><span class="card-meta-dot"></span><span>2026. 05. 10</span></div>
+      </div>
+      <div class="pick-arrow">→</div>
+    </div>
+  </div>
+
+  <!-- 뉴스레터 -->
+  <div class="newsletter">
+    <div class="newsletter-label">Newsletter</div>
+    <h2>매주 목요일, 살 거리를 알려드립니다</h2>
+    <p>에디터 3인의 직접 구매 후기 + 이번 주 핫딜을 이메일로 받아보세요.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="이메일 주소를 입력하세요" />
+      <button>구독하기</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">ITEM C</div>
+    <div class="footer-copy">© 2026 ITEM C · 물건을 읽는 매거진</div>
+  </div>
+</footer>
+
+</body>
+</html>

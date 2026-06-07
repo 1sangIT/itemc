@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>reMarkable Paper Pro 3개월 실사용 후기 — ITEM C</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;700&family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap');
+
+    :root {
+      --bg: #0a0a0a;
+      --card: #141414;
+      --card2: #1a1a1a;
+      --text: #f0f0f0;
+      --muted: #888;
+      --line: #2a2a2a;
+      --accent: #e8ff00;
+      --accent2: #ff4d00;
+      --body-max: 680px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,10,.92);
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px; letter-spacing: 3px;
+      color: var(--accent);
+    }
+    .logo span { color: var(--text); }
+    .tagline { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+    nav { display: flex; gap: 28px; }
+    nav a { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.2s; }
+    nav a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .article-hero {
+      position: relative;
+      height: 70vh; min-height: 480px;
+      overflow: hidden;
+      display: flex; align-items: flex-end;
+    }
+    .article-hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 200px; opacity: 0.12;
+    }
+    .article-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.4) 60%, rgba(0,0,0,.2) 100%);
+    }
+    .article-hero-content {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      padding: 0 24px 48px;
+    }
+    .cat-badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted);
+      border: 1px solid #444; padding: 3px 10px; border-radius: 2px;
+      margin-bottom: 16px;
+    }
+    .article-title {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900; line-height: 1.2;
+      margin-bottom: 16px;
+      max-width: 800px;
+    }
+    .article-desc {
+      font-size: 16px; color: #aaa; line-height: 1.6;
+      max-width: 600px; margin-bottom: 24px;
+    }
+    .article-byline {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 900; letter-spacing: 1px;
+      padding: 4px 10px; border-radius: 2px;
+    }
+    .badge-K { background: var(--accent); color: #000; }
+    .badge-G { background: #00e5a0; color: #000; }
+    .badge-B { background: var(--accent2); color: #fff; }
+    .byline-info { font-size: 13px; color: var(--muted); }
+    .byline-sep { color: #444; }
+
+    /* ── ARTICLE BODY ── */
+    .article-wrap {
+      max-width: 1200px; margin: 0 auto;
+      padding: 64px 24px;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 64px;
+      align-items: start;
+    }
+    .article-body {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 17px; line-height: 1.9;
+      color: #ddd;
+    }
+    .article-body p { margin-bottom: 28px; }
+    .article-body h2 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 22px; font-weight: 900;
+      color: var(--text); margin: 48px 0 16px;
+      padding-top: 48px;
+      border-top: 1px solid var(--line);
+    }
+    .article-body h3 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 17px; font-weight: 900;
+      color: var(--text); margin: 32px 0 12px;
+    }
+    .article-body img {
+      width: 100%; border-radius: 4px;
+      margin: 32px 0; display: block;
+    }
+    .article-body blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 16px 24px; margin: 32px 0;
+      background: var(--card);
+      font-style: italic; color: #bbb;
+      border-radius: 0 4px 4px 0;
+    }
+    .article-body .verdict {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 24px 28px;
+      margin: 40px 0;
+    }
+    .verdict-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; font-weight: 900;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px;
+    }
+    .verdict-row {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+    .verdict-row:last-child { border-bottom: none; }
+    .verdict-label { color: var(--muted); }
+    .verdict-value { font-weight: 700; }
+    .verdict-good { color: #00e5a0; }
+    .verdict-bad { color: var(--accent2); }
+
+    /* ── SIDEBAR ── */
+    .article-sidebar { position: sticky; top: 80px; }
+    .sidebar-box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .sidebar-title {
+      font-size: 10px; font-weight: 900;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 16px;
+    }
+    .sidebar-spec-row {
+      display: flex; justify-content: space-between;
+      padding: 8px 0; border-bottom: 1px solid var(--line);
+      font-size: 13px;
+    }
+    .sidebar-spec-row:last-child { border-bottom: none; }
+    .sidebar-spec-label { color: var(--muted); }
+    .sidebar-spec-value { font-weight: 700; text-align: right; }
+    .buy-btn {
+      display: block; width: 100%;
+      background: var(--accent); color: #000;
+      border: none; padding: 14px;
+      font-weight: 900; font-size: 14px;
+      letter-spacing: 0.5px; cursor: pointer;
+      border-radius: 2px; font-family: inherit;
+      text-align: center; transition: opacity 0.2s;
+      margin-top: 12px;
+    }
+    .buy-btn:hover { opacity: 0.85; }
+    .buy-btn-sub {
+      font-size: 11px; color: var(--muted);
+      text-align: center; margin-top: 8px;
+    }
+
+    /* ── RELATED ── */
+    .related {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px 64px;
+      border-top: 1px solid var(--line);
+      padding-top: 48px;
+    }
+    .related-title {
+      font-size: 12px; font-weight: 900;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .related-title::before { content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; }
+    .related-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+      background: var(--line);
+    }
+    .related-card {
+      background: var(--card); padding: 20px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .related-card:hover { background: var(--card2); }
+    .related-thumb {
+      width: 100%; aspect-ratio: 16/9;
+      background: #1a1a2e; border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; margin-bottom: 14px; opacity: 0.7;
+    }
+    .related-card-title { font-size: 14px; font-weight: 900; line-height: 1.4; margin-bottom: 8px; }
+    .related-meta { font-size: 11px; color: var(--muted); }
+
+    /* ── COMMENTS ── */
+    .comments {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .comments-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px;
+      padding-bottom: 16px; border-bottom: 1px solid var(--line);
+    }
+    .comments-title {
+      font-size: 13px; font-weight: 900;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .comments-count {
+      font-size: 12px; color: var(--muted);
+      background: var(--card); border: 1px solid var(--line);
+      padding: 2px 8px; border-radius: 20px;
+    }
+    .comment-form {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 4px; padding: 20px; margin-bottom: 28px;
+    }
+    .comment-form-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .comment-input {
+      background: var(--bg); border: 1px solid var(--line);
+      border-radius: 2px; padding: 10px 14px;
+      color: var(--text); font-family: inherit; font-size: 14px;
+      outline: none; transition: border-color 0.2s; width: 100%;
+    }
+    .comment-input:focus { border-color: var(--accent); }
+    .comment-input.name { width: 160px; flex-shrink: 0; }
+    textarea.comment-input { resize: none; min-height: 80px; }
+    .comment-submit {
+      background: var(--accent); color: #000;
+      border: none; padding: 10px 20px;
+      font-weight: 900; font-size: 13px; cursor: pointer;
+      border-radius: 2px; font-family: inherit;
+      float: right; margin-top: 8px;
+      transition: opacity 0.2s;
+    }
+    .comment-submit:hover { opacity: 0.85; }
+    .comment-list { display: flex; flex-direction: column; gap: 2px; background: var(--line); }
+    .comment-item {
+      background: var(--card); padding: 20px 24px;
+    }
+    .comment-meta {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 8px; font-size: 12px;
+    }
+    .comment-author { font-weight: 900; }
+    .comment-date { color: var(--muted); }
+    .comment-text { font-size: 14px; line-height: 1.7; color: #ccc; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--line); padding: 32px 24px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--accent); }
+    .footer-copy { font-size: 12px; color: #444; }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text); border-radius: 2px;
+    }
+    .mobile-nav {
+      display: none;
+      position: fixed; inset: 0; top: 60px;
+      background: rgba(10,10,10,.98);
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 32px; z-index: 99;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 24px; font-weight: 900; color: var(--muted);
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .mobile-nav a:hover { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .tagline { display: none; }
+      nav { display: none; }
+      .hamburger { display: flex; }
+
+      .article-hero { height: 50vh; min-height: 320px; }
+      .article-hero-bg { font-size: 100px; }
+      .article-title { font-size: clamp(22px, 6vw, 36px); }
+      .article-desc { font-size: 14px; }
+      .article-hero-content { padding: 0 16px 32px; }
+
+      .article-wrap {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 40px 16px;
+      }
+      .article-sidebar { position: static; }
+      .article-body { font-size: 16px; }
+
+      .related { padding: 0 16px 48px; }
+      .related-grid { grid-template-columns: 1fr 1fr; }
+
+      .comments { padding: 0 16px 60px; }
+      .comment-form-row { flex-direction: column; }
+      .comment-input.name { width: 100%; }
+
+      .footer-inner { flex-direction: column; gap: 8px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .related-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div>
+      <a href="index.html"><div class="logo">ITEM<span> C</span></div></a>
+    </div>
+    <div class="tagline">물건을 읽는 매거진</div>
+    <nav>
+      <a href="#">전체</a>
+      <a href="#">가젯</a>
+      <a href="#">라이프</a>
+      <a href="#">리뷰</a>
+      <a href="#">뉴스레터</a>
+    </nav>
+    <button class="hamburger" id="menuBtn" aria-label="메뉴">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobileNav">
+  <a href="index.html">전체</a>
+  <a href="#" onclick="closeMobileNav()">가젯</a>
+  <a href="#" onclick="closeMobileNav()">라이프</a>
+  <a href="#" onclick="closeMobileNav()">리뷰</a>
+  <a href="#" onclick="closeMobileNav()">뉴스레터</a>
+</nav>
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileNav = document.getElementById('mobileNav');
+  menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
+  function closeMobileNav() { mobileNav.classList.remove('open'); }
+</script>
+
+<!-- HERO -->
+<div class="article-hero">
+  <div class="article-hero-bg">📱</div>
+  <div class="article-hero-overlay"></div>
+  <div class="article-hero-content">
+    <div class="cat-badge">가젯</div>
+    <h1 class="article-title">reMarkable Paper Pro<br>3개월 실사용 후기</h1>
+    <p class="article-desc">E잉크 태블릿의 끝판왕인가, 아니면 30만원짜리 메모장인가. 국내 출시 전에 먼저 써봤다.</p>
+    <div class="article-byline">
+      <div class="badge badge-K">✍ 편집장 K</div>
+      <span class="byline-info">2026. 06. 07</span>
+      <span class="byline-sep">·</span>
+      <span class="byline-info">읽는 데 8분</span>
+    </div>
+  </div>
+</div>
+
+<!-- BODY + SIDEBAR -->
+<div class="article-wrap">
+
+  <!-- 본문 -->
+  <article class="article-body">
+    <p>솔직히 말하면, 처음엔 살 생각이 없었다. E잉크 태블릿이라는 카테고리 자체가 "있으면 좋은데 굳이?"의 영역이었으니까. 그런데 reMarkable Paper Pro를 3개월 쓰고 나서 생각이 바뀌었다. 정확히는 — 이걸 쓰면서 아이패드를 덜 쓰게 됐다.</p>
+
+    <p>가격은 비싸다. 솔직하게 인정하고 시작하자. 본체만 해도 60만원 선이다. 케이스랑 마커 더하면 80만원 가까이 간다. 이 돈이면 아이패드 미니 하나 산다. 그러니까 이걸 사겠다는 사람은 이미 아이패드가 있거나, 아이패드로는 채워지지 않는 무언가를 찾는 사람이다.</p>
+
+    <h2>종이처럼 쓴다는 게 무슨 뜻인가</h2>
+
+    <p>reMarkable이 내세우는 건 "종이 느낌"이다. 실제로 써보면 — 맞다. 그냥 종이에 쓰는 것 같다. E잉크 특유의 지연이 있긴 한데, 최신 Paper Pro에서는 거의 느끼기 힘든 수준으로 줄었다. 펜과 화면 사이의 마찰감도 의도적으로 설계돼 있어서, 미끄러지지 않는다.</p>
+
+    <blockquote>
+      "디지털 기기를 쓰는데 왜 이게 편한 거지?" 싶은 순간이 온다. 그게 이 제품의 핵심이다.
+    </blockquote>
+
+    <p>회의 중에 노트 쓸 때, 책 읽다가 메모할 때, 아이디어 스케치할 때 — 화면을 봐야 한다는 압박이 없다. 아이패드로 노트 쓰다 보면 어느 순간 유튜브를 켜고 있는 자신을 발견한다. reMarkable은 그게 불가능하다. 딴짓을 못 하는 기기다.</p>
+
+    <h2>아쉬운 것들</h2>
+
+    <p>한국어 UI가 없다. 영어와 몇 개 유럽 언어만 지원한다. 베타 버전에서 한국어 인식이 된다는 얘기가 돌고 있는데, 공식 지원은 아직이다. 손글씨를 텍스트로 변환하는 기능이 핵심인데, 한국어가 빠져있으면 이 기능을 제대로 못 쓴다.</p>
+
+    <p>Connect 구독도 걸린다. 일부 기능을 쓰려면 월정액을 내야 한다. 기기 값도 비싼데 구독까지 요구하는 건 솔직히 좀 야박하다. 없어도 기본 기능은 쓸 수 있으니 일단 없이 써보는 걸 추천한다.</p>
+
+    <!-- 총평 박스 -->
+    <div class="verdict">
+      <div class="verdict-title">ITEM C 총평</div>
+      <div class="verdict-row">
+        <span class="verdict-label">필기감</span>
+        <span class="verdict-value verdict-good">종이와 구분 안 됨 ✓</span>
+      </div>
+      <div class="verdict-row">
+        <span class="verdict-label">집중력</span>
+        <span class="verdict-value verdict-good">딴짓 불가 환경 ✓</span>
+      </div>
+      <div class="verdict-row">
+        <span class="verdict-label">한국어 지원</span>
+        <span class="verdict-value verdict-bad">아직 없음 ✗</span>
+      </div>
+      <div class="verdict-row">
+        <span class="verdict-label">가격</span>
+        <span class="verdict-value verdict-bad">본체 60만원+ ✗</span>
+      </div>
+      <div class="verdict-row">
+        <span class="verdict-label">추천 대상</span>
+        <span class="verdict-value">노트 중심 업무자 / 독서광</span>
+      </div>
+    </div>
+
+    <p>결론은 이렇다. 나는 3개월째 매일 쓰고 있다. 그리고 살 생각이 없었던 사람이 이 글을 쓰고 있다. 그게 이 제품에 대한 가장 솔직한 평가다.</p>
+  </article>
+
+  <!-- 사이드바 -->
+  <aside class="article-sidebar">
+    <div class="sidebar-box">
+      <div class="sidebar-title">제품 스펙</div>
+      <div class="sidebar-spec-row">
+        <span class="sidebar-spec-label">화면</span>
+        <span class="sidebar-spec-value">11.8" E Ink</span>
+      </div>
+      <div class="sidebar-spec-row">
+        <span class="sidebar-spec-label">해상도</span>
+        <span class="sidebar-spec-value">2160 × 1620</span>
+      </div>
+      <div class="sidebar-spec-row">
+        <span class="sidebar-spec-label">배터리</span>
+        <span class="sidebar-spec-value">최대 2주</span>
+      </div>
+      <div class="sidebar-spec-row">
+        <span class="sidebar-spec-label">무게</span>
+        <span class="sidebar-spec-value">490g</span>
+      </div>
+      <div class="sidebar-spec-row">
+        <span class="sidebar-spec-label">가격</span>
+        <span class="sidebar-spec-value">₩ 599,000~</span>
+      </div>
+    </div>
+    <a href="#" class="buy-btn">쿠팡에서 가격 확인 →</a>
+    <div class="buy-btn-sub">파트너스 활동으로 수수료를 받을 수 있습니다</div>
+  </aside>
+
+</div>
+
+<!-- 관련 아티클 -->
+<section class="related">
+  <div class="related-title">관련 아티클</div>
+  <div class="related-grid">
+    <div class="related-card">
+      <div class="related-thumb">🎧</div>
+      <div class="badge badge-G" style="margin-bottom:8px;">💰 에디터 G</div>
+      <div class="related-card-title">소니 WH-1000XM6 vs 에어팟 맥스 — 반값으로 더 잘 들린다</div>
+      <div class="related-meta">2026. 06. 05 · 6분</div>
+    </div>
+    <div class="related-card">
+      <div class="related-thumb">💻</div>
+      <div class="badge badge-B" style="margin-bottom:8px;">🔪 에디터 B</div>
+      <div class="related-card-title">맥북 에어 M4 — 칭찬하기 싫은데 어쩔 수 없다</div>
+      <div class="related-meta">2026. 06. 03 · 5분</div>
+    </div>
+    <div class="related-card">
+      <div class="related-thumb">⌚</div>
+      <div class="badge badge-K" style="margin-bottom:8px;">✍ 편집장 K</div>
+      <div class="related-card-title">갤럭시 워치 Ultra 2 — 이번엔 진짜 울트라가 맞다</div>
+      <div class="related-meta">2026. 06. 01 · 7분</div>
+    </div>
+  </div>
+</section>
+
+<!-- 댓글 -->
+<section class="comments">
+  <div class="comments-header">
+    <div class="comments-title">댓글</div>
+    <div class="comments-count">3</div>
+  </div>
+
+  <div class="comment-form">
+    <div class="comment-form-row">
+      <input type="text" class="comment-input name" placeholder="이름 (선택)" maxlength="20" />
+      <input type="text" class="comment-input" placeholder="비밀번호 (수정/삭제용, 선택)" maxlength="20" />
+    </div>
+    <textarea class="comment-input" placeholder="물건에 대한 생각을 남겨주세요..."></textarea>
+    <button class="comment-submit">등록</button>
+    <div style="clear:both;"></div>
+  </div>
+
+  <div class="comment-list">
+    <div class="comment-item">
+      <div class="comment-meta">
+        <span class="comment-author">박지훈</span>
+        <span class="comment-date">2026. 06. 07</span>
+      </div>
+      <div class="comment-text">저도 3개월째 쓰고 있는데 완전 공감입니다. 한국어 OCR만 됐으면 완벽한데 아쉽네요.</div>
+    </div>
+    <div class="comment-item">
+      <div class="comment-meta">
+        <span class="comment-author">익명</span>
+        <span class="comment-date">2026. 06. 07</span>
+      </div>
+      <div class="comment-text">가격이 너무 비싸서 망설이고 있었는데 이 리뷰 보고 마음이 흔들리네요... 이게 의도한 거죠?</div>
+    </div>
+    <div class="comment-item">
+      <div class="comment-meta">
+        <span class="comment-author">김선우</span>
+        <span class="comment-date">2026. 06. 06</span>
+      </div>
+      <div class="comment-text">딴짓 불가 환경이라는 게 핵심이네요. 구매 결정했습니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">ITEM C</div>
+    <div style="font-size:12px;color:#444;">© 2026 ITEM C · 물건을 읽는 매거진</div>
+  </div>
+</footer>
+
+</body>
+</html>
