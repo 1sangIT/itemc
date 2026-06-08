@@ -383,11 +383,11 @@
     </div>
     <div class="tagline">물건을 읽는 매거진</div>
     <nav>
-      <a href="#" class="active">전체</a>
+      <a href="index.html" class="active">전체</a>
       <a href="#">가젯</a>
       <a href="#">라이프</a>
       <a href="#">리뷰</a>
-      <a href="#">뉴스레터</a>
+      <a href="#newsletter">뉴스레터</a>
     </nav>
     <button class="hamburger" id="menuBtn" aria-label="메뉴">
       <span></span><span></span><span></span>
@@ -397,11 +397,11 @@
 
 <!-- MOBILE NAV -->
 <nav class="mobile-nav" id="mobileNav">
-  <a href="#" onclick="closeMobileNav()">전체</a>
+  <a href="index.html" onclick="closeMobileNav()">전체</a>
   <a href="#" onclick="closeMobileNav()">가젯</a>
   <a href="#" onclick="closeMobileNav()">라이프</a>
   <a href="#" onclick="closeMobileNav()">리뷰</a>
-  <a href="#" onclick="closeMobileNav()">뉴스레터</a>
+  <a href="#newsletter" onclick="closeMobileNav()">뉴스레터</a>
 </nav>
 <script>
   const menuBtn = document.getElementById('menuBtn');
@@ -436,7 +436,7 @@
   <div class="picks-list" id="picksList"></div>
 
   <!-- 뉴스레터 -->
-  <div class="newsletter">
+  <div class="newsletter" id="newsletter">
     <div class="newsletter-label">Newsletter</div>
     <h2>매주 목요일, 살 거리를 알려드립니다</h2>
     <p>에디터 3인의 직접 구매 후기 + 이번 주 핫딜을 이메일로 받아보세요.</p>
@@ -456,9 +456,9 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const BADGE = {
-  K: '<span class="badge badge-K">✍ 편집장 K</span>',
-  G: '<span class="badge badge-G">💰 에디터 G</span>',
-  B: '<span class="badge badge-B">🔪 에디터 B</span>'
+  K: '<span class="badge badge-K">K</span>',
+  G: '<span class="badge badge-G">G</span>',
+  B: '<span class="badge badge-B">B</span>'
 };
 
 function fmtDate(iso) {
