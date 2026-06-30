@@ -55,6 +55,7 @@ module.exports = async function handler(req, res) {
   const canonicalUrl = `https://www.itemc.kr/article/${encodeURIComponent(article.slug)}`;
   const appUrl = `https://www.itemc.kr/article.html?slug=${encodeURIComponent(article.slug)}`;
   const imageUrl = article.cover_image_url || '';
+  const imageType = imageUrl.toLowerCase().includes('.png') ? 'image/png' : 'image/jpeg';
   const emoji = article.cover_emoji || '◼︎';
 
   res.statusCode = 200;
@@ -75,6 +76,8 @@ module.exports = async function handler(req, res) {
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
   ${imageUrl ? `<meta property="og:image" content="${escapeHtml(imageUrl)}">` : ''}
+  ${imageUrl ? `<meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">` : ''}
+  ${imageUrl ? `<meta property="og:image:type" content="${escapeHtml(imageType)}">` : ''}
   ${imageUrl ? '<meta property="og:image:width" content="1200">' : ''}
   ${imageUrl ? '<meta property="og:image:height" content="630">' : ''}
 
