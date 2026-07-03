@@ -244,17 +244,33 @@
       gap: 2px; background: var(--line);
     }
     .review-link-card {
-      background: var(--card); padding: 20px 24px;
-      display: flex; flex-direction: column; gap: 8px;
+      background: var(--card);
+      display: flex; flex-direction: column;
       transition: background 0.2s; cursor: pointer;
+      overflow: hidden;
     }
     .review-link-card:hover { background: var(--card2); }
+    .review-link-thumb {
+      width: 100%; aspect-ratio: 16/9;
+      background: #1a1a2e center/cover no-repeat;
+      position: relative;
+    }
+    .review-link-thumb::after {
+      content: '▶';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: rgba(255,255,255,.85);
+      background: rgba(0,0,0,.3);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .review-link-card:hover .review-link-thumb::after { opacity: 1; }
+    .review-link-info { padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
     .review-link-source {
       font-size: 10px; font-weight: 900; letter-spacing: 1.5px;
       text-transform: uppercase; color: var(--accent2);
     }
-    .review-link-title { font-size: 14px; font-weight: 700; line-height: 1.4; }
-    .review-link-arrow { font-size: 18px; color: var(--muted); margin-top: auto; }
+    .review-link-title { font-size: 13px; font-weight: 700; line-height: 1.4; }
+    .review-link-arrow { font-size: 14px; color: var(--muted); margin-top: auto; }
 
     @media (max-width: 768px) {
       .review-links-grid { grid-template-columns: 1fr; }
@@ -474,9 +490,9 @@
   <div class="youtube-embed"><iframe id="youtubeFrame" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
 </div>
 
-<!-- 이 제품 더 보기 -->
+<!-- 유튜브 리뷰 -->
 <section class="review-links" id="reviewLinksSection" style="display:none;">
-  <div class="review-links-title">이 제품 더 보기</div>
+  <div class="review-links-title">유튜브 리뷰</div>
   <div class="review-links-grid" id="reviewLinksGrid"></div>
 </section>
 
@@ -627,19 +643,24 @@ async function loadArticle() {
     }
   }
 
-  // Review links
+  // Review links (YouTube 썸네일 카드)
   if (a.review_links && a.review_links.length) {
-    const sourceIcon = s => {
-      if (/youtube|youtu\.be/i.test(s)) return '📺';
-      if (/verge|wired|engadget|techcrunch|cnet/i.test(s)) return '🌐';
-      return '📝';
-    };
-    document.getElementById('reviewLinksGrid').innerHTML = a.review_links.map(r => `
+    document.getElementById('reviewLinksGrid').innerHTML = a.review_links.slice(0, 3).map(r => {
+      const ytId = extractYoutubeId(r.url);
+      const thumb = ytId
+        ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`
+        : '';
+      const source = r.source || (ytId ? 'YouTube' : '외부 리뷰');
+      return `
       <a class="review-link-card" href="${esc(r.url)}" target="_blank" rel="noopener">
-        <div class="review-link-source">${sourceIcon(r.source + r.url)} ${esc(r.source)}</div>
-        <div class="review-link-title">${esc(r.title)}</div>
-        <div class="review-link-arrow">↗</div>
-      </a>`).join('');
+        <div class="review-link-thumb" style="${thumb ? `background-image:url('${thumb}')` : 'background:#1a1a2e'}"></div>
+        <div class="review-link-info">
+          <div class="review-link-source">${esc(source)}</div>
+          <div class="review-link-title">${esc(r.title)}</div>
+          <div class="review-link-arrow">↗</div>
+        </div>
+      </a>`;
+    }).join('');
     document.getElementById('reviewLinksSection').style.display = '';
   }
 
