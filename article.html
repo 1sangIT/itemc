@@ -580,7 +580,11 @@ async function loadArticle() {
     <span class="byline-info">읽는 데 ${a.read_time}분</span>`;
 
   // Body + Verdict
-  let bodyHtml = a.body || '<p style="color:#555;">본문이 없습니다.</p>';
+  let bodyHtml = '';
+  if (a.body_image_url) {
+    bodyHtml += `<img src="${esc(a.body_image_url)}" alt="${esc(a.title)}" style="width:100%;border-radius:4px;margin:0 0 32px;display:block;"/>`;
+  }
+  bodyHtml += a.body || '<p style="color:#555;">본문이 없습니다.</p>';
 
   if (a.verdict && a.verdict.length) {
     const typeClass = { good: 'verdict-good', bad: 'verdict-bad', neutral: '' };

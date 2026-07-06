@@ -446,6 +446,17 @@
           </div>
 
           <div class="sidebar-box">
+            <div class="sidebar-box-title">본문 대표 이미지</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">본문 상단에 제품 이미지로 표시됩니다</div>
+            <img id="bodyImagePreview" class="upload-preview"/>
+            <div class="upload-area" onclick="document.getElementById('bodyImageFile').click()">
+              <input type="file" id="bodyImageFile" accept="image/*" onchange="uploadBodyImage(this)"/>
+              <div class="upload-area-text">클릭하여 이미지 업로드<br/><small>JPG, PNG, WebP · 최대 5MB</small></div>
+            </div>
+            <input type="hidden" id="fBodyImageUrl"/>
+          </div>
+
+          <div class="sidebar-box">
             <div class="sidebar-box-title">유튜브 영상</div>
             <div class="form-group">
               <input type="text" class="form-input" id="fYoutubeUrl" placeholder="https://youtu.be/... 또는 youtube.com/watch?v=..."/>
@@ -820,6 +831,8 @@
     document.getElementById('fCategory').value = '가젯';
     document.getElementById('fAuthor').value = 'K';
     document.getElementById('uploadPreview').classList.remove('show');
+    document.getElementById('fBodyImageUrl').value = '';
+    document.getElementById('bodyImagePreview').classList.remove('show');
     document.getElementById('publishToggle').classList.remove('on');
     document.getElementById('fYoutubeUrl').value = '';
     document.getElementById('fBuyUrl').value = '';
@@ -854,6 +867,15 @@
       const preview = document.getElementById('uploadPreview');
       preview.src = a.cover_image_url;
       preview.classList.add('show');
+    }
+
+    document.getElementById('fBodyImageUrl').value = a.body_image_url || '';
+    if (a.body_image_url) {
+      const preview = document.getElementById('bodyImagePreview');
+      preview.src = a.body_image_url;
+      preview.classList.add('show');
+    } else {
+      document.getElementById('bodyImagePreview').classList.remove('show');
     }
 
     document.getElementById('fYoutubeUrl').value = a.youtube_url || '';
@@ -899,6 +921,7 @@
       body: quill ? quill.root.innerHTML : '',
       cover_emoji: document.getElementById('fCoverEmoji').value || '📦',
       cover_image_url: document.getElementById('fCoverImageUrl').value || null,
+      body_image_url: document.getElementById('fBodyImageUrl').value || null,
       category: document.getElementById('fCategory').value,
       author_id: document.getElementById('fAuthor').value,
       read_time: parseInt(document.getElementById('fReadTime').value) || 5,
@@ -988,6 +1011,19 @@
     if (error) { toast('업로드 실패: ' + error.message, 'error'); return null; }
     const { data } = sb.storage.from('images').getPublicUrl(name);
     return data.publicUrl;
+  }
+
+  async function uploadBodyImage(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const url = await uploadToStorage(file);
+    if (url) {
+      document.getElementById('fBodyImageUrl').value = url;
+      const preview = document.getElementById('bodyImagePreview');
+      preview.src = url;
+      preview.classList.add('show');
+      toast('본문 이미지 업로드 완료 ✓', 'success');
+    }
   }
 
   async function uploadCoverImage(input) {
