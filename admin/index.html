@@ -1392,7 +1392,7 @@
           headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ from: `${fromName} <${fromEmail}>`, to: [sub.email], subject, html })
         });
-        res.ok ? sent++ : failed++;
+        if (res.ok) { sent++; } else { const err = await res.json(); console.error("Resend error:", err); failed++; }
       } catch { failed++; }
       status.textContent = `발송 중... (${sent + failed} / ${emails.length})`;
       await new Promise(r => setTimeout(r, 200));
