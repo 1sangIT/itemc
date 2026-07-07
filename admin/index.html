@@ -559,16 +559,22 @@
 
         <!-- 구독자 목록 -->
         <div class="sidebar-box" style="max-width:100%;margin-bottom:28px;">
-          <div class="sidebar-box-title">구독자 목록</div>
-          <table style="width:100%;border-collapse:collapse;font-size:13px;" id="nlSubTable">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="sidebar-box-title" style="margin-bottom:0;">구독자 목록</div>
+            <span style="font-size:12px;color:var(--muted);" id="nlSelectedLabel">0명 선택</span>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:13px;">
             <thead>
               <tr style="border-bottom:1px solid var(--line);color:var(--muted);">
+                <th style="padding:8px 4px;width:32px;">
+                  <input type="checkbox" id="nlSelectAll" onchange="toggleSelectAll(this)" style="cursor:pointer;">
+                </th>
                 <th style="text-align:left;padding:8px 4px;font-weight:500;">이메일</th>
                 <th style="text-align:right;padding:8px 4px;font-weight:500;">가입일</th>
               </tr>
             </thead>
             <tbody id="nlSubList">
-              <tr><td colspan="2" style="padding:16px 4px;color:var(--muted);">불러오는 중...</td></tr>
+              <tr><td colspan="3" style="padding:16px 4px;color:var(--muted);">불러오는 중...</td></tr>
             </tbody>
           </table>
         </div>
@@ -632,9 +638,10 @@
             <textarea class="form-input" id="nlClosing" rows="2" placeholder="이번 주도 좋은 물건 찾으시길. — 에디터 K"></textarea>
           </div>
 
-          <div style="display:flex;gap:10px;margin-top:8px;">
+          <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
             <button class="btn btn-secondary" onclick="previewNewsletter()">미리보기</button>
-            <button class="btn btn-primary" onclick="sendNewsletter()">전체 발송 →</button>
+            <button class="btn btn-secondary" onclick="sendNewsletter(true)">선택 발송 (<span id="nlSelectedCount">0</span>명) →</button>
+            <button class="btn btn-primary" onclick="sendNewsletter(false)">전체 발송 →</button>
           </div>
           <div id="nlSendStatus" style="margin-top:12px;font-size:13px;"></div>
         </div>
@@ -1173,11 +1180,15 @@
     if (subs?.length) {
       tbody.innerHTML = subs.map(s => `
         <tr style="border-bottom:1px solid var(--line);">
+          <td style="padding:10px 4px;width:32px;">
+            <input type="checkbox" class="sub-check" value="${s.email}" onchange="updateSelectedCount()" style="cursor:pointer;">
+          </td>
           <td style="padding:10px 4px;">${s.email}</td>
           <td style="padding:10px 4px;text-align:right;color:var(--muted);">${s.created_at?.slice(0,10)}</td>
         </tr>`).join('');
+      updateSelectedCount();
     } else {
-      tbody.innerHTML = '<tr><td colspan="2" style="padding:16px 4px;color:var(--muted);">구독자가 없습니다.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="3" style="padding:16px 4px;color:var(--muted);">구독자가 없습니다.</td></tr>';
     }
     const el = document.getElementById('nlSubCount');
     if (el) el.textContent = count ?? 0;
@@ -1321,18 +1332,44 @@
     win.document.close();
   }
 
-  async function sendNewsletter() {
+  function toggleSelectAll(cb) {
+    document.querySelectorAll('.sub-check').forEach(c => c.checked = cb.checked);
+    updateSelectedCount();
+  }
+
+  function updateSelectedCount() {
+    const checked = document.querySelectorAll('.sub-check:checked');
+    const n = checked.length;
+    document.getElementById('nlSelectedCount').textContent = n;
+    document.getElementById('nlSelectedLabel').textContent = `${n}명 선택`;
+    const allChecks = document.querySelectorAll('.sub-check');
+    const all = document.getElementById('nlSelectAll');
+    if (all) all.checked = allChecks.length > 0 && n === allChecks.length;
+  }
+
+  function getSelectedEmails() {
+    return Array.from(document.querySelectorAll('.sub-check:checked')).map(c => c.value);
+  }
+
+  async function sendNewsletter(selectedOnly = false) {
     const subject = document.getElementById('nlSubject').value.trim();
     const fromName = document.getElementById('nlFrom').value.trim() || 'ITEM C';
     const fromEmail = document.getElementById('nlFromEmail').value.trim();
     if (!subject) { toast('제목을 입력해주세요.', 'error'); return; }
     if (!fromEmail) { toast('발신 이메일을 입력해주세요.', 'error'); return; }
 
-    const { data: subs } = await sbAdmin.from('subscribers').select('email');
-    if (!subs?.length) { toast('구독자가 없습니다.', ''); return; }
+    let emails;
+    if (selectedOnly) {
+      emails = getSelectedEmails().map(e => ({ email: e }));
+      if (!emails.length) { toast('발송할 구독자를 선택해주세요.', 'error'); return; }
+    } else {
+      const { data: subs } = await sbAdmin.from('subscribers').select('email');
+      if (!subs?.length) { toast('구독자가 없습니다.', ''); return; }
+      emails = subs;
+    }
 
     const status = document.getElementById('nlSendStatus');
-    const confirmed = confirm(`총 ${subs.length}명에게 발송합니다. 계속할까요?`);
+    const confirmed = confirm(`총 ${emails.length}명에게 발송합니다. 계속할까요?`);
     if (!confirmed) return;
 
     status.style.color = '#e8ff00';
@@ -1348,7 +1385,7 @@
     });
 
     let sent = 0, failed = 0;
-    for (const sub of subs) {
+    for (const sub of emails) {
       try {
         const res = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -1357,8 +1394,8 @@
         });
         res.ok ? sent++ : failed++;
       } catch { failed++; }
-      status.textContent = `발송 중... (${sent + failed} / ${subs.length})`;
-      await new Promise(r => setTimeout(r, 200)); // rate limit 방지
+      status.textContent = `발송 중... (${sent + failed} / ${emails.length})`;
+      await new Promise(r => setTimeout(r, 200));
     }
 
     if (failed === 0) {
