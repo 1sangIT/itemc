@@ -350,6 +350,9 @@
       <a onclick="showPanel('comments')" id="nav-comments">
         <span class="icon">💬</span> 댓글
       </a>
+      <a onclick="showPanel('newsletter')" id="nav-newsletter">
+        <span class="icon">✉️</span> 뉴스레터
+      </a>
     </nav>
     <div class="sidebar-bottom">
       <a href="../index.html" target="_blank" class="sidebar-visit">↗ 사이트 보기</a>
@@ -536,6 +539,90 @@
       <div id="commentList" class="article-list"><div class="loading">불러오는 중...</div></div>
     </div>
 
+    <!-- NEWSLETTER -->
+    <div class="panel" id="panel-newsletter">
+      <div class="topbar">
+        <div class="topbar-title">뉴스레터 발송</div>
+      </div>
+      <div style="max-width:720px; padding:24px;">
+
+        <!-- 구독자 현황 -->
+        <div style="display:flex;gap:12px;margin-bottom:28px;">
+          <div class="stat-card">
+            <div class="stat-value" id="nlSubCount">-</div>
+            <div class="stat-label">총 구독자</div>
+          </div>
+          <div style="display:flex;align-items:center;">
+            <button class="btn btn-secondary" style="font-size:12px;" onclick="downloadSubscriberCSV()">CSV 다운로드</button>
+          </div>
+        </div>
+
+        <!-- 발송 폼 -->
+        <div class="sidebar-box" style="max-width:100%;">
+          <div class="sidebar-box-title">새 뉴스레터 작성</div>
+
+          <div class="form-group">
+            <label class="form-label">발신자 이름</label>
+            <input type="text" class="form-input" id="nlFrom" value="ITEM C" placeholder="ITEM C"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">발신 이메일 <span style="color:var(--muted);font-size:11px;">(Resend에서 인증된 주소)</span></label>
+            <input type="text" class="form-input" id="nlFromEmail" value="onboarding@resend.dev" placeholder="newsletter@itemc.co"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">제목</label>
+            <input type="text" class="form-input" id="nlSubject" placeholder="[ITEM C] 이번 주 살 거리 모음"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">메인 헤드라인</label>
+            <input type="text" class="form-input" id="nlHeadline" placeholder="이번 호 메인 제목"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">메인 소개 (1~2줄)</label>
+            <textarea class="form-input" id="nlIntro" rows="2" placeholder="이번 주 에디터가 직접 써보고 추천하는 것들을 모았습니다."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">메인 아티클 URL</label>
+            <input type="text" class="form-input" id="nlMainUrl" placeholder="https://1sangit.github.io/itemc/article.html?slug=..."/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">메인 아티클 이미지 URL (선택)</label>
+            <input type="text" class="form-input" id="nlMainImg" placeholder="https://..."/>
+          </div>
+
+          <div style="border-top:1px solid var(--line);margin:20px 0;padding-top:20px;">
+            <div class="sidebar-box-title" style="margin-bottom:16px;">서브 아티클 (최대 3개)</div>
+            <div id="nlSubArticles">
+              <div class="nl-sub-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                <input type="text" class="form-input" placeholder="제목" style="font-size:13px;"/>
+                <input type="text" class="form-input" placeholder="URL" style="font-size:13px;"/>
+              </div>
+              <div class="nl-sub-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                <input type="text" class="form-input" placeholder="제목" style="font-size:13px;"/>
+                <input type="text" class="form-input" placeholder="URL" style="font-size:13px;"/>
+              </div>
+              <div class="nl-sub-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                <input type="text" class="form-input" placeholder="제목" style="font-size:13px;"/>
+                <input type="text" class="form-input" placeholder="URL" style="font-size:13px;"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">마무리 한 마디 (선택)</label>
+            <textarea class="form-input" id="nlClosing" rows="2" placeholder="이번 주도 좋은 물건 찾으시길. — 에디터 K"></textarea>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:8px;">
+            <button class="btn btn-secondary" onclick="previewNewsletter()">미리보기</button>
+            <button class="btn btn-primary" onclick="sendNewsletter()">전체 발송 →</button>
+          </div>
+          <div id="nlSendStatus" style="margin-top:12px;font-size:13px;"></div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -548,7 +635,8 @@
   // ── CONFIG ──
   const SUPABASE_URL = 'https://axgiamwbkwjivbmfvvww.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z2lhbXdia3dqaXZibWZ2dnd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3OTAxNjEsImV4cCI6MjA5NjM2NjE2MX0.fz9iaZa9NCzLkszEnvqxBhdaFwj2J0tR6QFZH13Pwwo';
-  const ADMIN_PASSWORD = 'itemc2026'; // ← 원하는 비밀번호로 변경
+  const ADMIN_PASSWORD = 'itemc2026';
+  const RESEND_API_KEY = 're_VtQej5d8_Q6nc9fXK5g9hurhMLh5voJFN';
 
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   let quill;
@@ -723,6 +811,7 @@
     if (name === 'articles') loadArticles();
     if (name === 'comments') loadComments();
     if (name === 'dashboard') loadDashboard();
+    if (name === 'newsletter') loadSubscriberCount();
   }
 
   // ── DASHBOARD ──
@@ -1054,6 +1143,167 @@
     el.className = 'toast show' + (type ? ' ' + type : '');
     clearTimeout(el._t);
     el._t = setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  // ── NEWSLETTER ──
+  async function loadSubscriberCount() {
+    const { count } = await sb.from('subscribers').select('*', { count: 'exact', head: true });
+    const el = document.getElementById('nlSubCount');
+    if (el) el.textContent = count ?? 0;
+  }
+
+  async function downloadSubscriberCSV() {
+    const { data } = await sb.from('subscribers').select('email, created_at').order('created_at', { ascending: false });
+    if (!data?.length) { toast('구독자가 없습니다.', ''); return; }
+    const csv = 'email,가입일\n' + data.map(r => `${r.email},${r.created_at?.slice(0,10)}`).join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = `itemc_subscribers_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  function getSubArticles() {
+    return Array.from(document.querySelectorAll('#nlSubArticles .nl-sub-row')).map(row => {
+      const inputs = row.querySelectorAll('input');
+      return { title: inputs[0].value.trim(), url: inputs[1].value.trim() };
+    }).filter(r => r.title && r.url);
+  }
+
+  function buildEmailHtml({ from, headline, intro, mainUrl, mainImg, subArticles, closing }) {
+    const siteUrl = 'https://1sangit.github.io/itemc/';
+    const subArticlesHtml = subArticles.map(a => `
+      <tr>
+        <td style="padding:14px 0;border-bottom:1px solid #e8e8e8;">
+          <a href="${a.url}" style="font-size:15px;font-weight:700;color:#111;text-decoration:none;line-height:1.4;display:block;margin-bottom:4px;">${a.title}</a>
+          <a href="${a.url}" style="font-size:12px;color:#e8b800;text-decoration:none;letter-spacing:0.5px;">READ MORE →</a>
+        </td>
+      </tr>`).join('');
+
+    const mainImgHtml = mainImg
+      ? `<a href="${mainUrl || siteUrl}"><img src="${mainImg}" width="600" alt="${headline}" style="width:100%;max-width:600px;display:block;border-radius:4px 4px 0 0;"/></a>`
+      : '';
+
+    return `<!DOCTYPE html>
+<html lang="ko">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:-apple-system,'Noto Sans KR',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;">
+<tr><td align="center" style="padding:32px 16px;">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+  <!-- HEADER -->
+  <tr><td style="background:#0a0a0a;padding:24px 32px;border-radius:4px 4px 0 0;">
+    <a href="${siteUrl}" style="text-decoration:none;">
+      <span style="font-family:'Courier New',monospace;font-size:26px;font-weight:900;letter-spacing:4px;color:#e8ff00;">ITEM</span>
+      <span style="font-family:'Courier New',monospace;font-size:26px;font-weight:900;letter-spacing:4px;color:#f0f0f0;"> C</span>
+    </a>
+    <div style="font-size:10px;color:#666;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">물건을 읽는 매거진</div>
+  </td></tr>
+
+  <!-- ACCENT BAR -->
+  <tr><td style="background:#e8ff00;height:3px;"></td></tr>
+
+  <!-- MAIN ARTICLE -->
+  <tr><td style="background:#fff;padding:0;">
+    ${mainImgHtml}
+    <div style="padding:28px 32px 24px;">
+      <div style="font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#e8b800;margin-bottom:12px;">THIS WEEK</div>
+      <h2 style="font-size:22px;font-weight:900;color:#111;line-height:1.35;margin:0 0 14px;">${headline}</h2>
+      <p style="font-size:14px;color:#555;line-height:1.8;margin:0 0 20px;">${intro}</p>
+      ${mainUrl ? `<a href="${mainUrl}" style="display:inline-block;background:#0a0a0a;color:#e8ff00;font-size:12px;font-weight:900;letter-spacing:1px;padding:12px 24px;border-radius:2px;text-decoration:none;">지금 읽기 →</a>` : ''}
+    </div>
+  </td></tr>
+
+  <!-- SUB ARTICLES -->
+  ${subArticlesHtml ? `<tr><td style="background:#fff;padding:0 32px 8px;border-top:2px solid #f4f4f4;">
+    <div style="font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#999;padding:20px 0 4px;">MORE FROM ITEM C</div>
+    <table width="100%" cellpadding="0" cellspacing="0">${subArticlesHtml}</table>
+  </td></tr>` : ''}
+
+  <!-- CLOSING -->
+  ${closing ? `<tr><td style="background:#fafafa;padding:20px 32px;border-top:1px solid #eee;">
+    <p style="font-size:13px;color:#777;line-height:1.7;margin:0;font-style:italic;">${closing}</p>
+  </td></tr>` : ''}
+
+  <!-- FOOTER -->
+  <tr><td style="background:#0a0a0a;padding:20px 32px;border-radius:0 0 4px 4px;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="font-size:11px;color:#444;">© 2026 ITEM C · <a href="${siteUrl}" style="color:#666;text-decoration:none;">itemc.co</a></td>
+        <td align="right" style="font-size:11px;"><a href="{{unsubscribe_url}}" style="color:#555;text-decoration:underline;">수신거부</a></td>
+      </tr>
+    </table>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+  }
+
+  function previewNewsletter() {
+    const html = buildEmailHtml({
+      headline: document.getElementById('nlHeadline').value || '(제목 없음)',
+      intro: document.getElementById('nlIntro').value || '',
+      mainUrl: document.getElementById('nlMainUrl').value || '',
+      mainImg: document.getElementById('nlMainImg').value || '',
+      subArticles: getSubArticles(),
+      closing: document.getElementById('nlClosing').value || ''
+    });
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+  }
+
+  async function sendNewsletter() {
+    const subject = document.getElementById('nlSubject').value.trim();
+    const fromName = document.getElementById('nlFrom').value.trim() || 'ITEM C';
+    const fromEmail = document.getElementById('nlFromEmail').value.trim();
+    if (!subject) { toast('제목을 입력해주세요.', 'error'); return; }
+    if (!fromEmail) { toast('발신 이메일을 입력해주세요.', 'error'); return; }
+
+    const { data: subs } = await sb.from('subscribers').select('email');
+    if (!subs?.length) { toast('구독자가 없습니다.', ''); return; }
+
+    const status = document.getElementById('nlSendStatus');
+    const confirmed = confirm(`총 ${subs.length}명에게 발송합니다. 계속할까요?`);
+    if (!confirmed) return;
+
+    status.style.color = '#e8ff00';
+    status.textContent = `발송 중... (0 / ${subs.length})`;
+
+    const html = buildEmailHtml({
+      headline: document.getElementById('nlHeadline').value || '',
+      intro: document.getElementById('nlIntro').value || '',
+      mainUrl: document.getElementById('nlMainUrl').value || '',
+      mainImg: document.getElementById('nlMainImg').value || '',
+      subArticles: getSubArticles(),
+      closing: document.getElementById('nlClosing').value || ''
+    });
+
+    let sent = 0, failed = 0;
+    for (const sub of subs) {
+      try {
+        const res = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from: `${fromName} <${fromEmail}>`, to: [sub.email], subject, html })
+        });
+        res.ok ? sent++ : failed++;
+      } catch { failed++; }
+      status.textContent = `발송 중... (${sent + failed} / ${subs.length})`;
+      await new Promise(r => setTimeout(r, 200)); // rate limit 방지
+    }
+
+    if (failed === 0) {
+      status.style.color = '#00e5a0';
+      status.textContent = `✓ ${sent}명 발송 완료`;
+      toast(`뉴스레터 발송 완료 (${sent}명)`, 'success');
+    } else {
+      status.style.color = '#ff4d00';
+      status.textContent = `발송 완료: ${sent}명 성공 / ${failed}명 실패`;
+    }
   }
 </script>
 </body>
