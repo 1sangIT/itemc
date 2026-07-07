@@ -1373,7 +1373,7 @@
     if (!confirmed) return;
 
     status.style.color = '#e8ff00';
-    status.textContent = `발송 중... (0 / ${subs.length})`;
+    status.textContent = `발송 중... (0 / ${emails.length})`;
 
     const html = buildEmailHtml({
       headline: document.getElementById('nlHeadline').value || '',
