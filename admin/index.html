@@ -657,7 +657,9 @@
   const ADMIN_PASSWORD = 'itemc2026';
   const RESEND_API_KEY = 're_VtQej5d8_Q6nc9fXK5g9hurhMLh5voJFN';
 
+  const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z2lhbXdia3dqaXZibWZ2dnd3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDc5MDE2MSwiZXhwIjoyMDk2MzY2MTYxfQ.NozBWHKXbEQOzNrqBzivOEf_u2IAI5BNG6KdHj30SDE';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const sbAdmin = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
   let quill;
 
   // ── AUTH ──
@@ -1166,7 +1168,7 @@
 
   // ── NEWSLETTER ──
   async function loadSubscriberCount() {
-    const { data: subs, count } = await sb.from('subscribers').select('email, created_at', { count: 'exact' }).order('created_at', { ascending: false });
+    const { data: subs, count } = await sbAdmin.from('subscribers').select('email, created_at', { count: 'exact' }).order('created_at', { ascending: false });
     const tbody = document.getElementById('nlSubList');
     if (subs?.length) {
       tbody.innerHTML = subs.map(s => `
@@ -1182,7 +1184,7 @@
   }
 
   async function downloadSubscriberCSV() {
-    const { data } = await sb.from('subscribers').select('email, created_at').order('created_at', { ascending: false });
+    const { data } = await sbAdmin.from('subscribers').select('email, created_at').order('created_at', { ascending: false });
     if (!data?.length) { toast('구독자가 없습니다.', ''); return; }
     const csv = 'email,가입일\n' + data.map(r => `${r.email},${r.created_at?.slice(0,10)}`).join('\n');
     const a = document.createElement('a');
@@ -1326,7 +1328,7 @@
     if (!subject) { toast('제목을 입력해주세요.', 'error'); return; }
     if (!fromEmail) { toast('발신 이메일을 입력해주세요.', 'error'); return; }
 
-    const { data: subs } = await sb.from('subscribers').select('email');
+    const { data: subs } = await sbAdmin.from('subscribers').select('email');
     if (!subs?.length) { toast('구독자가 없습니다.', ''); return; }
 
     const status = document.getElementById('nlSendStatus');
