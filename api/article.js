@@ -60,7 +60,7 @@ module.exports = async function handler(req, res) {
 
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=86400');
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
   res.end(`<!doctype html>
 <html lang="ko">
 <head>
