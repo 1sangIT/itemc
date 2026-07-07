@@ -4,6 +4,18 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ITEM C — 물건을 읽는 매거진</title>
+  <script>
+    // Legacy URL support:
+    // article.html?slug=... has no server-side OG metadata, so redirect visitors
+    // to the share-safe route /article/... where product thumbnails are rendered.
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var slug = params.get('slug');
+      if (slug && window.location.pathname.endsWith('/article.html')) {
+        window.location.replace('/article/' + encodeURIComponent(slug));
+      }
+    })();
+  </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;700&family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap');
 
