@@ -296,6 +296,20 @@
       transition: opacity 0.2s;
     }
     .newsletter-form button:hover { opacity: 0.85; }
+    .newsletter-consent {
+      max-width: 440px; margin: 12px auto 0;
+      display: flex; align-items: flex-start; gap: 8px;
+      text-align: left;
+    }
+    .newsletter-consent input[type=checkbox] {
+      margin-top: 2px; flex-shrink: 0;
+      accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer;
+    }
+    .newsletter-consent label {
+      font-size: 11px; color: var(--muted); line-height: 1.6; cursor: pointer;
+    }
+    .newsletter-consent a { color: #666; text-decoration: underline; }
+    .newsletter-consent a:hover { color: var(--muted); }
 
     /* ── FOOTER ── */
     footer {
@@ -444,6 +458,10 @@
       <input type="email" id="subEmail" placeholder="이메일 주소를 입력하세요" />
       <button id="subBtn" onclick="subscribe()">구독하기</button>
     </div>
+    <div class="newsletter-consent">
+      <input type="checkbox" id="subConsent"/>
+      <label for="subConsent">뉴스레터 발송을 위해 이메일 주소를 수집합니다. 구독 취소 시 즉시 삭제됩니다. <a href="privacy.html" target="_blank">개인정보처리방침</a></label>
+    </div>
     <div id="subMsg" style="margin-top:12px;font-size:13px;display:none;"></div>
   </div>
 
@@ -586,10 +604,16 @@ loadMain();
 
 async function subscribe() {
   const email = document.getElementById('subEmail').value.trim();
+  const consent = document.getElementById('subConsent').checked;
   const msg = document.getElementById('subMsg');
   const btn = document.getElementById('subBtn');
+  msg.style.display = '';
+  if (!consent) {
+    msg.style.color = '#ff4d00';
+    msg.textContent = '개인정보 수집에 동의해주세요.';
+    return;
+  }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    msg.style.display = '';
     msg.style.color = '#ff4d00';
     msg.textContent = '올바른 이메일 주소를 입력해주세요.';
     return;
