@@ -1181,8 +1181,8 @@
   function onMainArticleSelect() {
     const sel = document.getElementById('nlMainArticle');
     const opt = sel.selectedOptions[0];
-    const siteUrl = 'https://1sangit.github.io/itemc';
-    document.getElementById('nlMainUrl').value = sel.value ? `${siteUrl}/article.html?slug=${sel.value}` : '';
+    const siteUrl = 'https://itemc.vercel.app';
+    document.getElementById('nlMainUrl').value = sel.value ? `${siteUrl}/article/${sel.value}` : '';
     document.getElementById('nlMainImg').value = opt?.dataset.img || '';
     if (opt?.dataset.title) document.getElementById('nlHeadline').value = opt.dataset.title;
     const article = nlArticleList.find(a => a.slug === sel.value);
@@ -1194,8 +1194,8 @@
   }
 
   function onSubArticleSelect(sel) {
-    const siteUrl = 'https://1sangit.github.io/itemc';
-    sel.dataset.url = sel.value ? `${siteUrl}/article.html?slug=${sel.value}` : '';
+    const siteUrl = 'https://itemc.vercel.app';
+    sel.dataset.url = sel.value ? `${siteUrl}/article/${sel.value}` : '';
     sel.dataset.title = sel.selectedOptions[0]?.dataset.title || '';
   }
 
@@ -1207,7 +1207,7 @@
   }
 
   function buildEmailHtml({ from, headline, intro, mainUrl, mainImg, subArticles, closing }) {
-    const siteUrl = 'https://1sangit.github.io/itemc/';
+    const siteUrl = 'https://itemc.vercel.app/';
     const subArticlesHtml = subArticles.map(a => `
       <tr>
         <td style="padding:14px 0;border-bottom:1px solid #e8e8e8;">
