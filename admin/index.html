@@ -1187,7 +1187,7 @@
     if (opt?.dataset.title) document.getElementById('nlHeadline').value = opt.dataset.title;
     const article = nlArticleList.find(a => a.slug === sel.value);
     if (article) {
-      const { data: full } = sb.from('articles').select('description').eq('slug', sel.value).single().then(({ data }) => {
+      sb.from('articles').select('description').eq('slug', sel.value).single().then(({ data }) => {
         if (data?.description) document.getElementById('nlIntro').value = data.description;
       });
     }
