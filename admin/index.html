@@ -567,7 +567,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">발신 이메일 <span style="color:var(--muted);font-size:11px;">(Resend에서 인증된 주소)</span></label>
-            <input type="text" class="form-input" id="nlFromEmail" value="onboarding@resend.dev" placeholder="newsletter@itemc.co"/>
+            <input type="text" class="form-input" id="nlFromEmail" value="onboarding@resend.dev" placeholder="newsletter@itemc.kr"/>
           </div>
           <div class="form-group">
             <label class="form-label">제목</label>
@@ -1181,7 +1181,7 @@
   function onMainArticleSelect() {
     const sel = document.getElementById('nlMainArticle');
     const opt = sel.selectedOptions[0];
-    const siteUrl = 'https://itemc.vercel.app';
+    const siteUrl = 'https://itemc.kr';
     document.getElementById('nlMainUrl').value = sel.value ? `${siteUrl}/article/${sel.value}` : '';
     document.getElementById('nlMainImg').value = opt?.dataset.img || '';
     if (opt?.dataset.title) document.getElementById('nlHeadline').value = opt.dataset.title;
@@ -1194,7 +1194,7 @@
   }
 
   function onSubArticleSelect(sel) {
-    const siteUrl = 'https://itemc.vercel.app';
+    const siteUrl = 'https://itemc.kr';
     sel.dataset.url = sel.value ? `${siteUrl}/article/${sel.value}` : '';
     sel.dataset.title = sel.selectedOptions[0]?.dataset.title || '';
   }
@@ -1207,7 +1207,7 @@
   }
 
   function buildEmailHtml({ from, headline, intro, mainUrl, mainImg, subArticles, closing }) {
-    const siteUrl = 'https://itemc.vercel.app/';
+    const siteUrl = 'https://itemc.kr/';
     const subArticlesHtml = subArticles.map(a => `
       <tr>
         <td style="padding:14px 0;border-bottom:1px solid #e8e8e8;">
@@ -1266,7 +1266,7 @@
   <tr><td style="background:#0a0a0a;padding:20px 32px;border-radius:0 0 4px 4px;">
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
-        <td style="font-size:11px;color:#444;">© 2026 ITEM C · <a href="${siteUrl}" style="color:#666;text-decoration:none;">itemc.co</a></td>
+        <td style="font-size:11px;color:#444;">© 2026 ITEM C · <a href="${siteUrl}" style="color:#666;text-decoration:none;">itemc.kr</a></td>
         <td align="right" style="font-size:11px;"><a href="{{unsubscribe_url}}" style="color:#555;text-decoration:underline;">수신거부</a></td>
       </tr>
     </table>
