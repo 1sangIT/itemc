@@ -1,6 +1,6 @@
 const RESEND_API_KEY = 're_VtQej5d8_Q6nc9fXK5g9hurhMLh5voJFN';
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -18,4 +18,4 @@ export default async function handler(req, res) {
 
   const data = await r.json();
   return res.status(r.status).json(data);
-}
+};
