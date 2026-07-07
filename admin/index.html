@@ -582,28 +582,31 @@
             <textarea class="form-input" id="nlIntro" rows="2" placeholder="이번 주 에디터가 직접 써보고 추천하는 것들을 모았습니다."></textarea>
           </div>
           <div class="form-group">
-            <label class="form-label">메인 아티클 URL</label>
-            <input type="text" class="form-input" id="nlMainUrl" placeholder="https://1sangit.github.io/itemc/article.html?slug=..."/>
-          </div>
-          <div class="form-group">
-            <label class="form-label">메인 아티클 이미지 URL (선택)</label>
-            <input type="text" class="form-input" id="nlMainImg" placeholder="https://..."/>
+            <label class="form-label">메인 아티클</label>
+            <select class="form-input" id="nlMainArticle" onchange="onMainArticleSelect()">
+              <option value="">— 선택 —</option>
+            </select>
+            <input type="hidden" id="nlMainUrl"/>
+            <input type="hidden" id="nlMainImg"/>
           </div>
 
           <div style="border-top:1px solid var(--line);margin:20px 0;padding-top:20px;">
             <div class="sidebar-box-title" style="margin-bottom:16px;">서브 아티클 (최대 3개)</div>
             <div id="nlSubArticles">
-              <div class="nl-sub-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-                <input type="text" class="form-input" placeholder="제목" style="font-size:13px;"/>
-                <input type="text" class="form-input" placeholder="URL" style="font-size:13px;"/>
+              <div class="nl-sub-row" style="margin-bottom:8px;">
+                <select class="form-input" style="font-size:13px;" onchange="onSubArticleSelect(this)">
+                  <option value="">— 선택 —</option>
+                </select>
               </div>
-              <div class="nl-sub-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-                <input type="text" class="form-input" placeholder="제목" style="font-size:13px;"/>
-                <input type="text" class="form-input" placeholder="URL" style="font-size:13px;"/>
+              <div class="nl-sub-row" style="margin-bottom:8px;">
+                <select class="form-input" style="font-size:13px;" onchange="onSubArticleSelect(this)">
+                  <option value="">— 선택 —</option>
+                </select>
               </div>
-              <div class="nl-sub-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-                <input type="text" class="form-input" placeholder="제목" style="font-size:13px;"/>
-                <input type="text" class="form-input" placeholder="URL" style="font-size:13px;"/>
+              <div class="nl-sub-row" style="margin-bottom:8px;">
+                <select class="form-input" style="font-size:13px;" onchange="onSubArticleSelect(this)">
+                  <option value="">— 선택 —</option>
+                </select>
               </div>
             </div>
           </div>
@@ -811,7 +814,7 @@
     if (name === 'articles') loadArticles();
     if (name === 'comments') loadComments();
     if (name === 'dashboard') loadDashboard();
-    if (name === 'newsletter') loadSubscriberCount();
+    if (name === 'newsletter') { loadSubscriberCount(); loadNlArticles(); }
   }
 
   // ── DASHBOARD ──
@@ -1162,11 +1165,45 @@
     a.click();
   }
 
+  let nlArticleList = [];
+
+  async function loadNlArticles() {
+    const { data } = await sb.from('articles').select('id,title,slug,cover_image_url').eq('published', true).order('created_at', { ascending: false });
+    if (!data) return;
+    nlArticleList = data;
+    const opts = data.map(a => `<option value="${a.slug}" data-title="${a.title.replace(/"/g,'&quot;')}" data-img="${a.cover_image_url||''}">${a.title}</option>`).join('');
+    document.getElementById('nlMainArticle').innerHTML = '<option value="">— 선택 —</option>' + opts;
+    document.querySelectorAll('#nlSubArticles select').forEach(sel => {
+      sel.innerHTML = '<option value="">— 선택 —</option>' + opts;
+    });
+  }
+
+  function onMainArticleSelect() {
+    const sel = document.getElementById('nlMainArticle');
+    const opt = sel.selectedOptions[0];
+    const siteUrl = 'https://1sangit.github.io/itemc';
+    document.getElementById('nlMainUrl').value = sel.value ? `${siteUrl}/article.html?slug=${sel.value}` : '';
+    document.getElementById('nlMainImg').value = opt?.dataset.img || '';
+    if (opt?.dataset.title) document.getElementById('nlHeadline').value = opt.dataset.title;
+    const article = nlArticleList.find(a => a.slug === sel.value);
+    if (article) {
+      const { data: full } = sb.from('articles').select('description').eq('slug', sel.value).single().then(({ data }) => {
+        if (data?.description) document.getElementById('nlIntro').value = data.description;
+      });
+    }
+  }
+
+  function onSubArticleSelect(sel) {
+    const siteUrl = 'https://1sangit.github.io/itemc';
+    sel.dataset.url = sel.value ? `${siteUrl}/article.html?slug=${sel.value}` : '';
+    sel.dataset.title = sel.selectedOptions[0]?.dataset.title || '';
+  }
+
   function getSubArticles() {
-    return Array.from(document.querySelectorAll('#nlSubArticles .nl-sub-row')).map(row => {
-      const inputs = row.querySelectorAll('input');
-      return { title: inputs[0].value.trim(), url: inputs[1].value.trim() };
-    }).filter(r => r.title && r.url);
+    return Array.from(document.querySelectorAll('#nlSubArticles select')).map(sel => ({
+      title: sel.dataset.title || '',
+      url: sel.dataset.url || ''
+    })).filter(r => r.title && r.url);
   }
 
   function buildEmailHtml({ from, headline, intro, mainUrl, mainImg, subArticles, closing }) {
