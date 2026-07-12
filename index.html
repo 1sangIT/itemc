@@ -222,6 +222,22 @@
       margin-bottom: 8px; flex: 1;
     }
 
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex; align-items: center; justify-content: center;
+      gap: 4px; margin: -40px 0 60px;
+    }
+    .page-btn {
+      min-width: 36px; height: 36px; padding: 0 10px;
+      background: none; border: 1px solid var(--line);
+      color: var(--muted); font-size: 13px; font-weight: 700;
+      font-family: inherit; cursor: pointer; letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    .page-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .page-btn.active { background: var(--accent); border-color: var(--accent); color: #000; }
+    .page-btn:disabled { opacity: 0.25; cursor: default; pointer-events: none; }
+
     /* ── EDITOR PICKS ── */
     .picks-list {
       display: flex; flex-direction: column;
@@ -443,6 +459,9 @@
     <div style="grid-column:1/-1; padding:40px; text-align:center; color:#555; font-size:14px;">불러오는 중...</div>
   </div>
 
+  <!-- 페이지네이션 -->
+  <div class="pagination" id="pagination" style="display:none;"></div>
+
   <!-- 에디터 픽 랭킹 -->
   <div class="section-header" id="picksHeader" style="display:none;">
     <div class="section-title">이달의 강력 추천</div>
@@ -492,15 +511,80 @@ function coverBg(a) {
   return '';
 }
 
-async function loadMain() {
+const PAGE_SIZE = 9; // 페이지당 아티클 수 (3×3)
+let heroArticles = [];   // hero 고정 3개
+let currentPage = 1;
+let totalCount = 0;
+
+function articleCardHtml(a) {
+  return `
+    <div class="article-card" onclick="location.href='${articleUrl(a)}'">
+      <div class="article-thumb" ${a.cover_image_url ? `style="background:url('${a.cover_image_url}') center/cover;opacity:1;font-size:0;"` : ''}>${a.cover_image_url ? '' : (a.cover_emoji || '📦')}</div>
+      <div class="cat-badge">${a.category}</div>
+      ${BADGE[a.author_id] || ''}
+      <div class="card-title-sm">${a.title}</div>
+      <div class="card-desc">${a.description || ''}</div>
+      <div class="card-meta" style="margin-top:auto;padding-top:12px;">
+        <span>${fmtDate(a.created_at)}</span>
+        <span class="card-meta-dot"></span>
+        <span>${a.read_time}분</span>
+      </div>
+    </div>`;
+}
+
+function renderPagination(total, page) {
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const pag = document.getElementById('pagination');
+  if (totalPages <= 1) { pag.style.display = 'none'; return; }
+  pag.style.display = 'flex';
+
+  let html = `<button class="page-btn" onclick="goPage(${page-1})" ${page===1?'disabled':''}>‹</button>`;
+  for (let p = 1; p <= totalPages; p++) {
+    html += `<button class="page-btn ${p===page?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  }
+  html += `<button class="page-btn" onclick="goPage(${page+1})" ${page===totalPages?'disabled':''}>›</button>`;
+  pag.innerHTML = html;
+}
+
+async function goPage(page) {
+  currentPage = page;
+  const offset = (page - 1) * PAGE_SIZE + 3; // hero 3개 이후부터
+
   const { data: articles } = await sb
     .from('articles')
     .select('*')
     .eq('published', true)
     .order('created_at', { ascending: false })
-    .limit(12);
+    .range(offset, offset + PAGE_SIZE - 1);
 
+  const grid = document.getElementById('articleGrid');
   if (!articles || articles.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555;font-size:14px;">더 많은 글이 곧 올라옵니다.</div>';
+  } else {
+    grid.innerHTML = articles.map(articleCardHtml).join('');
+  }
+
+  renderPagination(totalCount - 3, page);
+  window.scrollTo({ top: document.getElementById('articleGrid').offsetTop - 80, behavior: 'smooth' });
+}
+
+async function loadMain() {
+  // 전체 개수 파악
+  const { count } = await sb
+    .from('articles')
+    .select('*', { count: 'exact', head: true })
+    .eq('published', true);
+  totalCount = count || 0;
+
+  // hero용 최신 3개
+  const { data: topArticles } = await sb
+    .from('articles')
+    .select('*')
+    .eq('published', true)
+    .order('created_at', { ascending: false })
+    .range(0, 2);
+
+  if (!topArticles || topArticles.length === 0) {
     document.getElementById('heroGrid').innerHTML =
       '<div style="grid-column:1/-1;padding:60px;text-align:center;color:#555;font-size:14px;">아직 발행된 글이 없습니다.</div>';
     document.getElementById('articleGrid').innerHTML =
@@ -508,11 +592,13 @@ async function loadMain() {
     return;
   }
 
+  heroArticles = topArticles;
+
   // ── HERO ──
   const heroGrid = document.getElementById('heroGrid');
-  const main = articles[0];
-  const sub1 = articles[1];
-  const sub2 = articles[2];
+  const main = topArticles[0];
+  const sub1 = topArticles[1];
+  const sub2 = topArticles[2];
 
   let heroHtml = `
     <div class="hero-main" onclick="location.href='${articleUrl(main)}'" style="${coverBg(main)}">
@@ -554,50 +640,13 @@ async function loadMain() {
 
   if (sub1) heroHtml += subCardHtml(sub1);
   if (sub2) heroHtml += subCardHtml(sub2);
-
   heroGrid.innerHTML = heroHtml;
 
-  // ── ARTICLE GRID ──
-  const gridArticles = articles.slice(3, 9);
-  if (gridArticles.length === 0) {
-    document.getElementById('articleGrid').innerHTML =
-      '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555;font-size:14px;">더 많은 글이 곧 올라옵니다.</div>';
-  } else {
-    document.getElementById('articleGrid').innerHTML = gridArticles.map(a => `
-      <div class="article-card" onclick="location.href='${articleUrl(a)}'">
-        <div class="article-thumb" ${a.cover_image_url ? `style="background:url('${a.cover_image_url}') center/cover;opacity:1;font-size:0;"` : ''}>${a.cover_image_url ? '' : (a.cover_emoji || '📦')}</div>
-        <div class="cat-badge">${a.category}</div>
-        ${BADGE[a.author_id] || ''}
-        <div class="card-title-sm">${a.title}</div>
-        <div class="card-desc">${a.description || ''}</div>
-        <div class="card-meta" style="margin-top:auto;padding-top:12px;">
-          <span>${fmtDate(a.created_at)}</span>
-          <span class="card-meta-dot"></span>
-          <span>${a.read_time}분</span>
-        </div>
-      </div>`).join('');
-  }
+  // ── ARTICLE GRID (1페이지) ──
+  await goPage(1);
 
-  // ── PICKS ──
-  const picks = articles.slice(9, 12);
-  if (picks.length > 0) {
-    document.getElementById('picksHeader').style.display = '';
-    document.getElementById('picksList').innerHTML = picks.map((a, i) => `
-      <div class="pick-item" onclick="location.href='${articleUrl(a)}'">
-        <div class="pick-num">0${i+1}</div>
-        <div class="pick-thumb">${a.cover_emoji || '📦'}</div>
-        <div class="pick-info">
-          ${BADGE[a.author_id] || ''}
-          <div class="pick-title" style="margin-top:6px;">${a.title}</div>
-          <div class="card-meta">
-            <span>${a.category}</span>
-            <span class="card-meta-dot"></span>
-            <span>${fmtDate(a.created_at)}</span>
-          </div>
-        </div>
-        <div class="pick-arrow">→</div>
-      </div>`).join('');
-  }
+  // ── PICKS (고정: 상위 3개 제외 이달의 추천은 별도 없음, 섹션 유지 시 아래 활성화) ──
+  // picks 섹션은 현재 비활성 (페이지네이션으로 대체)
 }
 
 loadMain();
