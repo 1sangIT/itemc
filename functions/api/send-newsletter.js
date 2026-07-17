@@ -1,5 +1,3 @@
-const RESEND_API_KEY = 're_VtQej5d8_Q6nc9fXK5g9hurhMLh5voJFN';
-
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -12,11 +10,12 @@ export async function onRequestOptions() {
 
 export async function onRequestPost(context) {
   const { from, to, subject, html } = await context.request.json();
+  const apiKey = context.env.RESEND_API_KEY;
 
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ from, to, subject, html }),
