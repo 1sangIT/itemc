@@ -601,10 +601,9 @@ async function loadArticle() {
 
   // Sidebar
   let sidebarHtml = '';
-  // 공식 제품 페이지로만 연결하는 비협찬 리뷰는 파트너스 고지를 노출하지 않는다.
-  const nonAffiliateSlugs = new Set([
-    'invaderobo-physical-ai-led-keyring-review',
-    'dpvr-g5-ai-smart-glasses-review'
+  // 파트너스 수수료가 실제 적용되는 글에만 고지를 노출한다.
+  const affiliateSlugs = new Set([
+    'loop-earplugs-engage-experience-dream-review'
   ]);
 
   if (a.specs) {
@@ -622,9 +621,9 @@ async function loadArticle() {
 
   if (a.buy_url) {
     const label = a.buy_label || '가격 확인 →';
-    const disclosure = nonAffiliateSlugs.has(a.slug)
-      ? ''
-      : '<div class="buy-btn-sub">파트너스 활동으로 수수료를 받을 수 있습니다</div>';
+    const disclosure = affiliateSlugs.has(a.slug)
+      ? '<div class="buy-btn-sub">파트너스 활동으로 수수료를 받을 수 있습니다</div>'
+      : '';
     sidebarHtml += `
       <a href="${esc(a.buy_url)}" target="_blank" rel="noopener" class="buy-btn">${esc(label)}</a>
       ${disclosure}`;
